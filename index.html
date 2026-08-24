@@ -612,6 +612,12 @@
         <div class="acoes" style="margin-top:12px">
           <button class="btn neutra mini" type="button" id="btnCopiarCodigo">Copiar código</button>
         </div>
+        <div style="margin-top:16px;border-top:2px solid var(--linha);padding-top:14px">
+          <p class="rot-campo">Entrada de novos alunos</p>
+          <div id="estadoTranca"></div>
+          <button class="btn sec mini" type="button" id="btnTrancar" style="margin-top:10px">Carregando</button>
+          <p class="fonte-quadro">Abra no início da aula, feche quando todos entrarem. Quem já está na turma continua entrando normalmente.</p>
+        </div>
       </div>
       <div class="card">
         <span class="etiqueta et-folha">Meta coletiva</span>
@@ -917,6 +923,9 @@ async function entrarComoAluno(){
     var doc = await refTurma(cod).get();
     if(!doc.exists) throw new Error("codigo");
     var cred = await auth.signInAnonymously();
+    var jaEstava = await refAlunos(cod).doc(cred.user.uid).get();
+    // Turma trancada aceita quem já entrou antes, e recusa gente nova.
+    if(doc.data().aberta === false && !jaEstava.exists) throw new Error("trancada");
     S.papel = "aluno"; S.uid = cred.user.uid; S.apelido = ape; S.codigo = cod; S.turma = doc.data();
     await refAlunos(cod).doc(S.uid).set({
       apelido: ape,
@@ -926,8 +935,10 @@ async function entrarComoAluno(){
     localStorage.setItem("diario_codigo", cod);
     await abrirApp();
   }catch(e){
-    if(e.message !== "codigo") console.error(e);
-    erroEntrada(e.message === "codigo" ? "Não encontrei turma com esse código. Confira com o professor." : traduzErro(e));
+    if(e.message !== "codigo" && e.message !== "trancada") console.error(e);
+    if(e.message === "codigo") erroEntrada("Não encontrei turma com esse código. Confira com o professor.");
+    else if(e.message === "trancada") erroEntrada("Esta turma está fechada para novas entradas. Peça ao professor para abrir.");
+    else erroEntrada(traduzErro(e));
   }finally{
     $("btnEntrarAluno").disabled = false;
     $("statusEntrada").textContent = "";
@@ -1428,7 +1439,7 @@ async function criarTurma(){
       livre = !doc.exists; tentativas++;
     }
     if(!livre) throw new Error("Não consegui gerar um código livre. Tente de novo.");
-    var dados = {nome:nome, escola:escola, professorUid:S.uid, meta:0, desafio:"", totalTurma:0,
+    var dados = {nome:nome, escola:escola, professorUid:S.uid, meta:0, desafio:"", totalTurma:0, aberta:true,
                  criadoEm: firebase.firestore.FieldValue.serverTimestamp()};
     await refTurma(cod).set(dados);
     await db.collection("professores").doc(S.uid).set({codigo: cod}, {merge:true});
@@ -1451,7 +1462,7 @@ async function carregarTudoProfessor(){
     S.registrosTurma = regsSnap.docs.map(function(d){ var o = d.data(); o.id = d.id; return o; });
     S.registrosTurma.sort(function(a,b){ return (b.data || "").localeCompare(a.data || ""); });
     await atualizarTotalTurma();
-    renderAlunos(); renderMetaProf(); renderRegistrosTurma();
+    renderAlunos(); renderMetaProf(); renderTranca(); renderRegistrosTurma();
     await Promise.all([carregarMural(), carregarGestaoAtividades()]);
     if(!$("p-painel").hidden) desenharGraficosTurma();
   }catch(e){
@@ -1503,6 +1514,26 @@ function verAluno(a){
   }).join("\n");
   alert("Aluno: " + (a.apelido || "sem apelido") + "\nRegistros: " + regs.length +
         "\n\n" + (linhas || "Nenhum registro."));
+}
+
+function renderTranca(){
+  var aberta = !(S.turma && S.turma.aberta === false);
+  $("estadoTranca").innerHTML = aberta
+    ? '<span class="selo s-feito">Aberta, qualquer um com o código entra</span>'
+    : '<span class="selo s-fazer">Fechada, só quem já entrou</span>';
+  $("btnTrancar").textContent = aberta ? "Fechar a turma" : "Abrir a turma";
+}
+
+async function alternarTranca(){
+  var aberta = !(S.turma && S.turma.aberta === false);
+  $("btnTrancar").disabled = true;
+  try{
+    await refTurma(S.codigo).update({aberta: !aberta});
+    S.turma.aberta = !aberta;
+    renderTranca();
+    toast(aberta ? "Turma fechada para novas entradas" : "Turma aberta");
+  }catch(e){ console.error(e); toast(traduzErro(e)); }
+  finally{ $("btnTrancar").disabled = false; }
 }
 
 function renderMetaProf(){
@@ -1929,6 +1960,7 @@ function ligarTudo(){
   });
   $("btnCriarTurma").addEventListener("click", criarTurma);
   $("btnSalvarMeta").addEventListener("click", salvarMeta);
+  $("btnTrancar").addEventListener("click", alternarTranca);
   $("btnCopiarCodigo").addEventListener("click", function(){
     if(navigator.clipboard) navigator.clipboard.writeText(S.codigo).then(function(){ toast("Código copiado"); });
   });
