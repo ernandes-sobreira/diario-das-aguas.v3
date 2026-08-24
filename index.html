@@ -822,7 +822,7 @@ function traduzErro(e){
   if(c.indexOf("wrong-password") > -1 || c.indexOf("invalid-credential") > -1) return "E-mail ou senha incorretos.";
   if(c.indexOf("user-not-found") > -1) return "Não existe conta com esse e-mail. Use Criar conta.";
   if(c.indexOf("too-many-requests") > -1) return "Muitas tentativas. Espere um minuto e tente de novo.";
-  if(c.indexOf("permission-denied") > -1) return "Sem permissão. Confira as regras do Firestore.";
+  if(c.indexOf("permission-denied") > -1) return "Sem permissão para ler os dados. Publique o arquivo firestore.rules no console do Firebase e confira se o login Anônimo está ativado em Authentication.";
   if(c.indexOf("operation-not-allowed") > -1) return "Método de login desativado no console do Firebase.";
   return (e && e.message) ? e.message : "Não foi possível concluir.";
 }
@@ -920,9 +920,11 @@ async function entrarComoAluno(){
   $("btnEntrarAluno").disabled = true;
   $("statusEntrada").textContent = "Entrando…";
   try{
+    // O login precisa vir ANTES de qualquer leitura. As regras do Firestore
+    // exigem usuário autenticado, e sem isso a leitura da turma é negada.
+    var cred = await auth.signInAnonymously();
     var doc = await refTurma(cod).get();
     if(!doc.exists) throw new Error("codigo");
-    var cred = await auth.signInAnonymously();
     var jaEstava = await refAlunos(cod).doc(cred.user.uid).get();
     // Turma trancada aceita quem já entrou antes, e recusa gente nova.
     if(doc.data().aberta === false && !jaEstava.exists) throw new Error("trancada");
