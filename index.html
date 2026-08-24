@@ -1,0 +1,1951 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0B6E8A">
+<title>Diário das Águas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Paleta tirada do percurso da agua, da nascente a torneira */
+    --nascente:#0E7C6B;   --nascente-claro:#E4F5F1;
+    --rio:#0B6E8A;        --rio-fundo:#064A5E;   --rio-claro:#E4F4F9;
+    --sol:#E8A317;        --sol-claro:#FEF4E0;
+    --mata:#2F7440;       --mata-claro:#EAF6EC;
+    --terra:#9C5122;      --terra-claro:#FBEFE6;
+    --chuva:#5B60C4;      --chuva-claro:#EEEFFB;
+    --flor:#C0397A;       --flor-claro:#FCEDF4;
+    --tinta:#0F2027; --tinta-fraca:#5A6E76; --linha:#DCE9EC; --linha-forte:#BCD2D8;
+    --sombra:0 2px 4px rgba(6,74,94,.05), 0 12px 32px rgba(6,74,94,.10);
+    --raio:20px; --base:16.5px;
+  }
+  body.fonte-grande{--base:19.5px}
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:#fff;color:var(--tinta);
+       font:var(--base)/1.6 Nunito,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+       -webkit-font-smoothing:antialiased}
+  h1,h2,h3,.display{font-family:"Baloo 2",Nunito,sans-serif;font-weight:800;letter-spacing:-.015em}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+  @media(max-width:640px){.wrap{padding:0 14px}}
+  [hidden]{display:none !important}
+
+  /* ---------- topo ---------- */
+  .topo{background:linear-gradient(160deg,#0E7C6B 0%,#0B6E8A 48%,#064A5E 100%);color:#fff;
+        padding:14px 0 0;position:relative;overflow:hidden}
+  .topo-linha{display:flex;align-items:center;gap:12px;flex-wrap:wrap;position:relative;z-index:2}
+  .gota{width:46px;height:46px;border-radius:16px;background:rgba(255,255,255,.16);
+        display:grid;place-items:center;font-size:23px;flex:0 0 auto}
+  .topo h1{font-size:1.4rem;margin:0;line-height:1.05}
+  .topo .sub{font-size:.82rem;color:#B7E4E0;margin:2px 0 0}
+  .cresce{flex:1}
+  .btn-topo{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(183,228,224,.42);
+            border-radius:999px;padding:9px 15px;font:inherit;font-size:.85rem;font-weight:700;
+            cursor:pointer;min-height:44px}
+  .btn-topo:hover{background:rgba(255,255,255,.26)}
+  .cracha{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.16);
+          border-radius:999px;padding:8px 15px;font-size:.88rem;font-weight:800}
+  .onda-topo{display:block;width:100%;height:26px;margin-top:12px}
+
+  /* ---------- navegacao ---------- */
+  nav{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);
+      border-bottom:1px solid var(--linha)}
+  .abas{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:11px 0}
+  .abas::-webkit-scrollbar{display:none}
+  .aba{flex:0 0 auto;background:#fff;border:2px solid var(--linha);color:#20444E;border-radius:999px;
+       padding:9px 16px;font:inherit;font-size:.92rem;font-weight:800;cursor:pointer;white-space:nowrap;
+       min-height:46px;display:inline-flex;align-items:center;gap:7px;transition:transform .12s}
+  .aba:hover{border-color:var(--rio)}
+  .aba[aria-selected="true"]{background:var(--rio);border-color:var(--rio);color:#fff}
+  :focus-visible{outline:3px solid var(--sol);outline-offset:2px;border-radius:8px}
+
+  main{padding:24px 0 84px}
+  h2.titulo{font-size:1.75rem;margin:0 0 4px}
+  .linha-fina{color:var(--tinta-fraca);margin:0 0 22px;max-width:64ch}
+  h3{font-size:1.14rem;margin:0 0 12px}
+  .card{background:#fff;border:2px solid var(--linha);border-radius:var(--raio);padding:20px;
+        margin-bottom:16px;box-shadow:var(--sombra)}
+  .card.destaque-rio{border-color:#BEE4EF;background:linear-gradient(180deg,var(--rio-claro),#fff 65%)}
+  .card.destaque-sol{border-color:#F3DCA8;background:linear-gradient(180deg,var(--sol-claro),#fff 65%)}
+  .card.destaque-mata{border-color:#C4E6CB;background:linear-gradient(180deg,var(--mata-claro),#fff 65%)}
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .grid-2{display:grid;gap:16px}
+  @media(min-width:900px){.grid-2{grid-template-columns:1.6fr 1fr}}
+  .etiqueta{display:inline-block;font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+            padding:6px 12px;border-radius:999px;margin-bottom:11px}
+  .et-mar{background:var(--rio-claro);color:var(--rio-fundo)}
+  .et-limao{background:var(--sol-claro);color:#8A6002}
+  .et-folha{background:var(--mata-claro);color:var(--mata)}
+  .et-coral{background:var(--terra-claro);color:var(--terra)}
+  .et-uva{background:var(--chuva-claro);color:var(--chuva)}
+
+  /* ---------- formularios ---------- */
+  label.campo{display:block;margin-bottom:14px}
+  label.campo span,.rot-campo{display:block;font-size:.74rem;font-weight:800;letter-spacing:.1em;
+       text-transform:uppercase;color:var(--tinta-fraca);margin-bottom:7px}
+  label.campo small{display:block;font-weight:400;text-transform:none;letter-spacing:0;
+                    color:var(--tinta-fraca);font-size:.86rem;margin-bottom:6px}
+  input,select,textarea{width:100%;padding:12px 14px;border:2px solid var(--linha-forte);border-radius:14px;
+        font:inherit;font-size:1rem;background:#fff;color:var(--tinta);min-height:50px}
+  input:focus,select:focus,textarea:focus{border-color:var(--rio)}
+  textarea{min-height:100px;resize:vertical}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--rio);color:#fff;
+       border:2px solid var(--rio);border-radius:999px;padding:13px 24px;font:inherit;font-size:.98rem;
+       font-weight:800;cursor:pointer;min-height:52px}
+  .btn:hover{filter:brightness(1.12)}
+  .btn:active{transform:translateY(1px)}
+  .btn:disabled{opacity:.55;cursor:not-allowed;filter:none}
+  .btn.sec{background:#fff;color:var(--rio)}
+  .btn.sec:hover{background:var(--rio-claro);filter:none}
+  .btn.neutra{background:#fff;color:#2C505A;border-color:var(--linha-forte)}
+  .btn.neutra:hover{background:#F4F9FA;filter:none}
+  .btn.perigo{background:#fff;color:#9B2C2C;border-color:#EDC3C3}
+  .btn.mini{padding:8px 15px;min-height:42px;font-size:.86rem}
+  .acoes{display:flex;gap:10px;flex-wrap:wrap}
+  .linha-campos{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+
+  /* escolhas grandes, feitas para dedo de crianca */
+  .escolhas{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));margin-bottom:16px}
+  .escolha-bt{border:2px solid var(--linha);background:#fff;border-radius:16px;padding:13px 8px;
+              font:inherit;font-weight:800;font-size:.92rem;cursor:pointer;min-height:82px;
+              display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+              color:#2C505A;transition:transform .12s}
+  .escolha-bt .emo{font-size:26px;line-height:1}
+  .escolha-bt:hover{border-color:var(--rio)}
+  .escolha-bt[aria-pressed="true"]{background:var(--rio);border-color:var(--rio);color:#fff}
+  .escolha-bt.tom-sol[aria-pressed="true"]{background:var(--sol);border-color:var(--sol);color:#3A2703}
+  .escolha-bt.tom-mata[aria-pressed="true"]{background:var(--mata);border-color:var(--mata);color:#fff}
+  .emojis{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .emoji-bt{width:52px;height:52px;border-radius:15px;border:2px solid var(--linha);background:#fff;
+            font-size:24px;cursor:pointer;display:grid;place-items:center}
+  .emoji-bt[aria-pressed="true"]{border-color:var(--sol);background:var(--sol-claro);transform:scale(1.06)}
+
+  /* ---------- indicadores ---------- */
+  .kpis{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(132px,1fr))}
+  .kpi{border:2px solid var(--linha);border-radius:17px;padding:15px;background:#F7FBFC}
+  .kpi h4{margin:0;font-size:.72rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--tinta-fraca)}
+  .kpi p{margin:5px 0 0;font-size:2rem;font-family:"Baloo 2",sans-serif;font-weight:800;color:var(--rio-fundo);
+         font-variant-numeric:tabular-nums;line-height:1}
+  .barra{height:16px;background:var(--linha);border-radius:999px;overflow:hidden}
+  .barra i{display:block;height:100%;border-radius:999px;
+           background:linear-gradient(90deg,var(--nascente),var(--rio) 55%,var(--sol));width:0;transition:width .45s ease}
+  .barra-rot{display:flex;justify-content:space-between;font-size:.87rem;font-weight:800;
+             color:var(--tinta-fraca);margin-top:8px}
+
+  /* ---------- diario em linha do tempo ---------- */
+  .dia{position:relative;padding-left:34px;margin-bottom:22px}
+  .dia::before{content:"";position:absolute;left:11px;top:26px;bottom:-22px;width:3px;
+               background:linear-gradient(180deg,var(--rio),#CBE7EF)}
+  .dia:last-child::before{display:none}
+  .dia-cab{position:relative;display:flex;align-items:center;gap:10px;margin-bottom:11px}
+  .dia-cab::before{content:"";position:absolute;left:-34px;top:3px;width:25px;height:25px;border-radius:50%;
+                   background:var(--rio);border:4px solid #fff;box-shadow:0 0 0 2px var(--rio-claro)}
+  .dia-data{font-family:"Baloo 2",sans-serif;font-weight:800;font-size:1.05rem;color:var(--rio-fundo)}
+  .dia-conta{font-size:.8rem;font-weight:800;color:var(--tinta-fraca)}
+  .reg{display:grid;grid-template-columns:52px 1fr auto;gap:13px;align-items:center;padding:14px;
+       border:2px solid var(--linha);border-radius:17px;margin-bottom:10px;background:#fff}
+  .reg .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:25px;
+            background:var(--rio-claro)}
+  .reg .tit{font-weight:700;line-height:1.35}
+  .reg .meta{font-size:.84rem;color:var(--tinta-fraca)}
+  .selo{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:4px 11px;
+        font-size:.75rem;font-weight:800}
+  .s-feito{background:var(--mata-claro);color:var(--mata)}
+  .s-fazer{background:var(--sol-claro);color:#8A6002}
+  .s-lugar{background:var(--rio-claro);color:var(--rio-fundo)}
+  .ops{display:flex;gap:6px;flex-direction:column}
+
+  /* ---------- conquistas ---------- */
+  .conquistas{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(152px,1fr))}
+  .conq{border:2px solid var(--linha);border-radius:17px;padding:15px;text-align:center;background:#fff;
+        opacity:.42;filter:grayscale(1)}
+  .conq.ganha{opacity:1;filter:none;border-color:var(--sol);background:var(--sol-claro)}
+  .conq .emo{font-size:32px;display:block;margin-bottom:7px}
+  .conq .nom{font-weight:800;font-size:.92rem}
+  .conq .des{font-size:.79rem;color:var(--tinta-fraca);margin-top:3px;display:block}
+
+  /* ---------- mural ---------- */
+  .post{border:2px solid var(--linha);border-radius:17px;padding:16px;margin-bottom:12px;background:#fff}
+  .post .cab{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+  .post .autor{font-weight:800;color:var(--rio-fundo)}
+  .post .quando{font-size:.8rem;color:var(--tinta-fraca)}
+  .post img{max-width:100%;border-radius:14px;margin-top:12px;display:block}
+
+  /* ---------- descobrir ---------- */
+  .figura{width:100%;height:auto;display:block;border-radius:16px}
+  .saiba{border-left:5px solid var(--sol);background:var(--sol-claro);border-radius:0 14px 14px 0;
+         padding:14px 17px;margin:14px 0}
+  .saiba b{display:block;font-family:"Baloo 2",sans-serif;font-size:1rem;margin-bottom:3px;color:#7A5402}
+  .quiz-op{display:block;width:100%;text-align:left;border:2px solid var(--linha);background:#fff;
+           border-radius:14px;padding:13px 15px;margin-bottom:9px;font:inherit;font-size:.97rem;
+           cursor:pointer;min-height:52px}
+  .quiz-op:hover{border-color:var(--rio)}
+  .quiz-op.certa{background:var(--mata-claro);border-color:var(--mata);font-weight:700}
+  .quiz-op.errada{background:var(--terra-claro);border-color:var(--terra)}
+  .quiz-op:disabled{cursor:default}
+  .quiz-passo{font-size:.78rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+              color:var(--tinta-fraca);margin-bottom:8px}
+  .resultado-med{background:var(--rio-claro);border:2px solid #BEE4EF;border-radius:16px;padding:16px;margin-top:14px}
+  .resultado-med .num{font-family:"Baloo 2",sans-serif;font-size:2.1rem;font-weight:800;color:var(--rio-fundo);line-height:1.1}
+
+  .aviso{border-radius:15px;padding:15px 17px;margin:0 0 18px;font-size:.94rem}
+  .aviso.info{background:var(--rio-claro);border:2px solid #BEE4EF;color:#053E4F}
+  .aviso.atencao{background:var(--sol-claro);border:2px solid #F0D49A;color:#79540A}
+  .aviso.erro{background:var(--terra-claro);border:2px solid #EDC5AC;color:#8A4517}
+  .aviso b{display:block;margin-bottom:4px}
+  .vazio{text-align:center;color:var(--tinta-fraca);padding:30px 18px;border:2px dashed var(--linha-forte);
+         border-radius:17px}
+  .carregando{text-align:center;color:var(--tinta-fraca);padding:24px}
+  .grafico{position:relative;height:260px}
+  .codigo-turma{font-family:"Baloo 2",monospace;font-size:2.5rem;font-weight:800;letter-spacing:.22em;
+                color:var(--rio-fundo);background:var(--rio-claro);border-radius:17px;padding:18px 10px;
+                text-align:center;margin:0 0 12px}
+  .fonte-quadro{font-size:.81rem;color:var(--tinta-fraca);margin:9px 0 0}
+  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;background:var(--rio-fundo);color:#fff;
+         padding:13px 24px;border-radius:999px;font-size:.92rem;font-weight:800;opacity:0;pointer-events:none;
+         transition:opacity .25s;z-index:99;box-shadow:0 10px 28px rgba(6,74,94,.38)}
+  .toast.ver{opacity:1}
+
+  /* ---------- entrada ---------- */
+  .entrada{position:fixed;inset:0;z-index:200;background:linear-gradient(160deg,#0E7C6B,#0B6E8A 45%,#064A5E);
+           display:grid;place-items:center;padding:18px;overflow-y:auto}
+  .painel-entrada{width:min(520px,100%);background:#fff;border-radius:26px;padding:0;overflow:hidden;
+                  box-shadow:0 24px 70px rgba(0,0,0,.34)}
+  .capa-entrada{background:linear-gradient(160deg,#0E7C6B,#0B6E8A);padding:18px 22px 0}
+  .capa-entrada h2{margin:0;color:#fff;font-size:1.75rem}
+  .capa-entrada p{margin:4px 0 12px;color:#B7E4E0;font-size:.92rem}
+  .corpo-entrada{padding:22px}
+  .escolha{display:flex;gap:10px;margin:0 0 18px}
+  .escolha button{flex:1;border:2px solid var(--linha);background:#fff;border-radius:16px;padding:14px 10px;
+                  font:inherit;font-weight:800;cursor:pointer;min-height:56px;color:#2C505A}
+  .escolha button[aria-pressed="true"]{background:var(--rio);border-color:var(--rio);color:#fff}
+  .traco-rio{stroke-dasharray:900;stroke-dashoffset:900;animation:correr 2.6s .2s ease-out forwards}
+  @keyframes correr{to{stroke-dashoffset:0}}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}
+    .traco-rio{stroke-dashoffset:0}}
+  @media print{nav,.btn,.btn-topo,.acoes,.toast{display:none!important}.card{box-shadow:none;break-inside:avoid}}
+</style>
+
+</head>
+<body>
+<!-- ===================== ENTRADA ===================== -->
+<div class="entrada" id="entrada">
+  <div class="painel-entrada">
+    <div class="capa-entrada">
+      <h2>Diário das Águas</h2>
+      <p>Descubra, registre e cuide da água da sua turma.</p>
+      <svg class="figura" id="svgEntrada" viewBox="0 0 640 300" role="img" aria-labelledby="rioTit rioDesc">
+  <title id="rioTit">O caminho da água, da nascente até a torneira</title>
+  <desc id="rioDesc">A água evapora do rio, forma nuvem, cai como chuva na serra, brota na nascente, desce pelo córrego protegido pela mata da margem, chega ao rio, passa pela estação de tratamento e sai na torneira da casa. Depois volta a evaporar e o ciclo recomeça.</desc>
+  <defs>
+    <linearGradient id="ceu" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#DFF3F8"/><stop offset="100%" stop-color="#F4FBFC"/>
+    </linearGradient>
+    <linearGradient id="agua" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#63C9D8"/><stop offset="100%" stop-color="#0B6E8A"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="640" height="300" fill="url(#ceu)"/>
+
+  <!-- sol -->
+  <circle cx="566" cy="46" r="24" fill="#E8A317"/>
+  <g stroke="#E8A317" stroke-width="3.5" stroke-linecap="round">
+    <line x1="566" y1="8" x2="566" y2="16"/><line x1="566" y1="76" x2="566" y2="84"/>
+    <line x1="528" y1="46" x2="536" y2="46"/><line x1="596" y1="46" x2="604" y2="46"/>
+    <line x1="539" y1="19" x2="545" y2="25"/><line x1="587" y1="67" x2="593" y2="73"/>
+  </g>
+
+  <!-- nuvem e chuva -->
+  <g>
+    <ellipse cx="150" cy="46" rx="42" ry="24" fill="#fff"/>
+    <ellipse cx="185" cy="52" rx="30" ry="19" fill="#fff"/>
+    <ellipse cx="118" cy="54" rx="26" ry="17" fill="#fff"/>
+    <g stroke="#5B60C4" stroke-width="4" stroke-linecap="round" opacity=".75">
+      <line x1="126" y1="74" x2="120" y2="90"/><line x1="152" y1="76" x2="146" y2="94"/>
+      <line x1="178" y1="74" x2="172" y2="90"/>
+    </g>
+  </g>
+  <!-- seta de evaporacao -->
+  <path d="M470 168 C 486 132, 452 106, 420 92 C 380 74, 300 62, 224 56"
+        fill="none" stroke="#5B60C4" stroke-width="3" stroke-dasharray="7 8" stroke-linecap="round" opacity=".7"/>
+  <polygon points="224,50 210,56 224,62" fill="#5B60C4" opacity=".7"/>
+
+  <!-- serra -->
+  <path d="M0 168 L 70 96 L 118 132 L 168 84 L 232 168 Z" fill="#2E6B57"/>
+  <path d="M70 96 L 96 122 L 44 122 Z" fill="#3B8C4E"/>
+  <path d="M168 84 L 196 116 L 140 116 Z" fill="#3B8C4E"/>
+
+  <!-- terreno -->
+  <path d="M0 168 L640 168 L640 300 L0 300 Z" fill="#EFEAD9"/>
+  <path d="M0 168 C 120 176, 260 162, 400 172 C 500 179, 570 168, 640 174 L640 300 L0 300 Z" fill="#E6E9D6"/>
+
+  <!-- rio -->
+  <path class="traco-rio" d="M150 130 C 160 168, 210 178, 250 196 C 300 218, 340 200, 396 208 C 470 218, 520 236, 620 232"
+        fill="none" stroke="url(#agua)" stroke-width="17" stroke-linecap="round"/>
+
+  <!-- mata ciliar -->
+  <g fill="#3B8C4E">
+    <circle cx="212" cy="176" r="13"/><circle cx="228" cy="186" r="9"/>
+    <circle cx="300" cy="196" r="12"/><circle cx="318" cy="205" r="8"/>
+    <circle cx="268" cy="219" r="11"/><circle cx="360" cy="222" r="10"/>
+  </g>
+  <g fill="#2E6B57" opacity=".85">
+    <circle cx="196" cy="190" r="9"/><circle cx="340" cy="192" r="8"/>
+  </g>
+
+  <!-- nascente -->
+  <circle cx="150" cy="130" r="11" fill="#63C9D8" stroke="#fff" stroke-width="3"/>
+  <text x="150" y="118" text-anchor="middle" font-family="Nunito,sans-serif" font-size="12.5" font-weight="700" fill="#064A5E">Nascente</text>
+
+  <!-- estacao de tratamento -->
+  <g>
+    <rect x="404" y="176" width="76" height="46" rx="9" fill="#fff" stroke="#0B6E8A" stroke-width="3"/>
+    <circle cx="424" cy="199" r="9" fill="#E4F4F9" stroke="#0B6E8A" stroke-width="2.5"/>
+    <circle cx="448" cy="199" r="9" fill="#E4F4F9" stroke="#0B6E8A" stroke-width="2.5"/>
+    <circle cx="466" cy="199" r="6" fill="#63C9D8"/>
+    <text x="442" y="240" text-anchor="middle" font-family="Nunito,sans-serif" font-size="12.5" font-weight="700" fill="#064A5E">Tratamento</text>
+  </g>
+
+  <!-- casa e torneira -->
+  <g>
+    <rect x="530" y="180" width="72" height="52" rx="8" fill="#fff" stroke="#B5622A" stroke-width="3"/>
+    <path d="M524 180 L566 150 L608 180 Z" fill="#C0397A"/>
+    <rect x="556" y="206" width="20" height="26" rx="3" fill="#E4F4F9" stroke="#B5622A" stroke-width="2.5"/>
+    <text x="566" y="256" text-anchor="middle" font-family="Nunito,sans-serif" font-size="12.5" font-weight="700" fill="#064A5E">Sua casa</text>
+  </g>
+
+  <!-- peixes -->
+  <g fill="#0B6E8A" opacity=".65">
+    <path d="M262 246 q 12 -8 24 0 q -12 8 -24 0 Z"/><path d="M262 246 l -8 -5 l 0 10 Z"/>
+    <path d="M330 258 q 10 -6 20 0 q -10 6 -20 0 Z"/><path d="M330 258 l -7 -4 l 0 8 Z"/>
+  </g>
+</svg>
+
+    </div>
+    <div class="corpo-entrada">
+      <div class="escolha">
+        <button type="button" id="modoAluno" aria-pressed="true">Sou aluno</button>
+        <button type="button" id="modoProf" aria-pressed="false">Sou professor</button>
+      </div>
+
+      <div id="formAluno">
+        <label class="campo">
+          <span>Código da turma</span>
+          <small>Seis letras ou números que o professor passou.</small>
+          <input type="text" id="inCodigo" maxlength="6" autocapitalize="characters" placeholder="Ex.: AGUA42">
+        </label>
+        <label class="campo">
+          <span>Como quer ser chamado</span>
+          <small>Primeiro nome ou apelido. Não escreva sobrenome.</small>
+          <input type="text" id="inApelido" maxlength="24" placeholder="Ex.: Ana">
+        </label>
+        <button class="btn" type="button" id="btnEntrarAluno" style="width:100%">Entrar na turma</button>
+      </div>
+
+      <div id="formProf" hidden>
+        <label class="campo"><span>E-mail</span><input type="email" id="inEmail" placeholder="seu@email.com"></label>
+        <label class="campo"><span>Senha</span><small>Mínimo de seis caracteres.</small>
+          <input type="password" id="inSenha" placeholder="Sua senha"></label>
+        <div class="acoes">
+          <button class="btn" type="button" id="btnEntrarProf" style="flex:1">Entrar</button>
+          <button class="btn sec" type="button" id="btnCriarProf" style="flex:1">Criar conta</button>
+        </div>
+        <p class="fonte-quadro">A conta de professor é quem responde pelos dados da turma. Alunos não criam conta e não informam dado pessoal.</p>
+      </div>
+
+      <p class="aviso erro" id="erroEntrada" hidden style="margin:16px 0 0"></p>
+      <p class="fonte-quadro" id="statusEntrada"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== TOPO ===================== -->
+<header class="topo" id="topo" hidden>
+  <div class="wrap topo-linha">
+    <div class="gota" aria-hidden="true">💧</div>
+    <div>
+      <h1>Diário das Águas</h1>
+      <p class="sub" id="subTurma">—</p>
+    </div>
+    <div class="cresce"></div>
+    <span class="cracha" id="cracha">—</span>
+    <button class="btn-topo" type="button" id="btnFonte" aria-pressed="false">Aa</button>
+    <button class="btn-topo" type="button" id="btnSair">Sair</button>
+  </div>
+  <svg class="onda-topo" viewBox="0 0 1440 26" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 26 L0 14 C 200 0, 380 26, 580 15 C 780 4, 960 26, 1160 16 C 1290 10, 1360 20, 1440 12 L1440 26 Z" fill="#fff"/>
+  </svg>
+</header>
+
+<nav id="nav" hidden>
+  <div class="wrap">
+    <div class="abas" role="tablist" aria-label="Seções"></div>
+  </div>
+</nav>
+
+<main class="wrap" id="conteudo" hidden>
+
+<!-- ============ DESCOBRIR ============ -->
+<section class="painel" id="p-descobrir" role="tabpanel" hidden>
+  <h2 class="titulo">Descobrir a água</h2>
+  <p class="linha-fina">Antes de cuidar, entender. Comece pelo caminho que a água faz até chegar na sua torneira.</p>
+
+  <div class="card">
+    <div id="figuraCiclo"></div>
+    <p class="fonte-quadro">Siga a figura com o dedo, da nascente até a casa, e depois volte pela seta pontilhada. A água não acaba nem aparece do nada, ela circula.</p>
+  </div>
+
+  <div class="grid">
+    <div class="card destaque-rio">
+      <span class="etiqueta et-mar">Bacia hidrográfica</span>
+      <h3>Você mora dentro de uma</h3>
+      <p>Bacia hidrográfica é toda a área onde a chuva que cai escorre para o mesmo rio. O telhado da sua casa, a rua, o quintal da escola: tudo drena para algum córrego.</p>
+      <p>Por isso o lixo jogado na rua não fica na rua. Na primeira chuva forte ele desce com a água.</p>
+    </div>
+
+    <div class="card destaque-mata">
+      <span class="etiqueta et-folha">Mata ciliar</span>
+      <h3>A mata da margem</h3>
+      <p>A faixa de vegetação na beira do rio tem nome: mata ciliar, de cílio, porque protege como o cílio protege o olho.</p>
+      <p>Ela segura o barranco para a terra não desabar dentro do rio, filtra parte do que escorre do terreno e faz sombra, mantendo a água mais fresca para os peixes.</p>
+    </div>
+
+    <div class="card destaque-sol">
+      <span class="etiqueta et-limao">Água doce</span>
+      <h3>Por que é tão pouca</h3>
+      <p>A maior parte da água do planeta é salgada, do mar. Da parte doce, boa porção está congelada em geleiras ou guardada no subsolo, difícil de alcançar.</p>
+      <p>Sobra pouca água doce fácil de usar, em rios e lagos. É essa que chega na torneira, e é essa que você economiza.</p>
+    </div>
+
+    <div class="card">
+      <span class="etiqueta et-uva">Do rio até a torneira</span>
+      <h3>O que acontece no tratamento</h3>
+      <p>A água captada no rio passa por etapas antes de virar água de beber:</p>
+      <ul style="padding-left:20px;margin:0">
+        <li>a sujeira fina se junta em flocos maiores</li>
+        <li>os flocos afundam e ficam no fundo do tanque</li>
+        <li>a água atravessa camadas de areia e pedra</li>
+        <li>recebe desinfecção para eliminar micróbios</li>
+      </ul>
+      <p style="margin-top:10px">Cada etapa custa energia e dinheiro. Água desperdiçada na pia é trabalho jogado fora.</p>
+    </div>
+  </div>
+
+  <!-- experimento -->
+  <div class="card">
+    <span class="etiqueta et-coral">Experimento</span>
+    <h3>Quanto água pinga a sua torneira</h3>
+    <p>Ninguém precisa acreditar em número de cartaz. Meça você mesmo e descubra o da sua casa.</p>
+    <ol style="padding-left:20px">
+      <li>Ache uma torneira que pinga, em casa ou na escola.</li>
+      <li>Ponha um copo embaixo e marque um minuto no relógio.</li>
+      <li>Meça quantos mililitros juntaram. Use um copo medidor, ou uma seringa sem agulha da farmácia.</li>
+    </ol>
+    <label class="campo" style="max-width:280px">
+      <span>Mililitros em um minuto</span>
+      <input type="number" id="medMl" min="0" max="5000" step="0.5" placeholder="Ex.: 12">
+    </label>
+    <div class="acoes">
+      <button class="btn" type="button" id="btnCalcular">Calcular</button>
+      <button class="btn neutra" type="button" id="btnRegistrarMed" hidden>Registrar no meu diário</button>
+    </div>
+    <div id="resultadoMed"></div>
+  </div>
+
+  <!-- quiz -->
+  <div class="card">
+    <span class="etiqueta et-uva">Quiz</span>
+    <h3>Teste o que você descobriu</h3>
+    <div id="quiz"></div>
+  </div>
+</section>
+
+<!-- ============ ALUNO: REGISTRO ============ -->
+<section class="painel" id="p-registro" role="tabpanel" hidden>
+  <h2 class="titulo">Registrar uma ação</h2>
+  <p class="linha-fina">Conte o que você fez, ou o que ainda vai fazer, para cuidar da água.</p>
+  <div class="grid-2">
+    <div class="card">
+      <p class="rot-campo">Onde foi</p>
+      <div class="escolhas" id="escLugar">
+        <button type="button" class="escolha-bt" data-v="Casa" aria-pressed="true"><span class="emo">🏠</span>Casa</button>
+        <button type="button" class="escolha-bt" data-v="Escola" aria-pressed="false"><span class="emo">🏫</span>Escola</button>
+        <button type="button" class="escolha-bt" data-v="Comunidade" aria-pressed="false"><span class="emo">🏘️</span>Comunidade</button>
+      </div>
+
+      <p class="rot-campo">Já fez ou vai fazer</p>
+      <div class="escolhas" id="escTipo" style="grid-template-columns:repeat(2,1fr)">
+        <button type="button" class="escolha-bt tom-mata" data-v="Feito" aria-pressed="true"><span class="emo">✅</span>Já fiz</button>
+        <button type="button" class="escolha-bt tom-sol" data-v="A fazer" aria-pressed="false"><span class="emo">⏳</span>Vou fazer</button>
+      </div>
+
+      <label class="campo"><span>O que foi</span>
+        <input type="text" id="rTitulo" maxlength="90" placeholder="Ex.: Fechei a torneira enquanto escovava os dentes"></label>
+
+      <p class="rot-campo">Escolha um símbolo</p>
+      <div class="emojis" id="escEmoji"></div>
+
+      <label class="campo"><span>Data</span><input type="date" id="rData"></label>
+      <label class="campo"><span>Contar mais</span><small>Opcional.</small>
+        <textarea id="rNotas" maxlength="600" placeholder="Como foi? Quem ajudou? O que você percebeu?"></textarea></label>
+
+      <div class="acoes">
+        <button class="btn" type="button" id="btnSalvarReg">Salvar no meu diário</button>
+        <button class="btn neutra" type="button" id="btnLimparReg">Limpar</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="card destaque-sol">
+        <span class="etiqueta et-limao">Desafio da semana</span>
+        <div id="caixaDesafio"><p class="carregando">Carregando…</p></div>
+      </div>
+      <div class="card destaque-mata">
+        <span class="etiqueta et-folha">Meta da turma</span>
+        <div id="caixaMeta"><p class="carregando">Carregando…</p></div>
+      </div>
+      <div class="card destaque-rio">
+        <span class="etiqueta et-mar">Você sabia</span>
+        <div id="caixaSabia"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ALUNO: DIARIO ============ -->
+<section class="painel" id="p-diario" role="tabpanel" hidden>
+  <h2 class="titulo">Meu diário</h2>
+  <p class="linha-fina">Tudo que você registrou. Só você e o professor veem isto.</p>
+  <div class="card">
+    <div class="linha-campos">
+      <label class="campo"><span>Buscar</span><input type="text" id="fBusca" placeholder="Palavra"></label>
+      <label class="campo"><span>Lugar</span>
+        <select id="fLugar"><option value="">Todos</option><option>Casa</option><option>Escola</option><option>Comunidade</option></select></label>
+      <label class="campo"><span>Situação</span>
+        <select id="fTipo"><option value="">Todas</option><option>Feito</option><option>A fazer</option></select></label>
+    </div>
+    <div class="acoes">
+      <button class="btn neutra" type="button" id="btnCsv">Baixar CSV</button>
+      <button class="btn neutra" type="button" onclick="window.print()">Imprimir</button>
+    </div>
+  </div>
+  <div id="listaRegistros"></div>
+</section>
+
+<!-- ============ ALUNO: PROGRESSO ============ -->
+<section class="painel" id="p-progresso" role="tabpanel" hidden>
+  <h2 class="titulo">Meu progresso</h2>
+  <p class="linha-fina">Seus números, calculados a partir do que você registrou.</p>
+  <div class="card">
+    <div class="kpis" id="kpisAluno"></div>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>Ações por semana</h3>
+      <div class="grafico"><canvas id="gSemana"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>Onde você agiu</h3>
+      <div class="grafico"><canvas id="gLugar"></canvas></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Conquistas</h3>
+    <p class="fonte-quadro" style="margin:0 0 14px">Aparecem sozinhas quando você cumpre. Ninguém distribui.</p>
+    <div class="conquistas" id="conquistas"></div>
+  </div>
+</section>
+
+<!-- ============ ALUNO: MURAL ============ -->
+<section class="painel" id="p-mural" role="tabpanel" hidden>
+  <h2 class="titulo">Mural da turma</h2>
+  <p class="linha-fina">O que você publica aqui a turma inteira lê.</p>
+  <div class="aviso atencao">
+    <b>Antes de publicar</b>
+    Não escreva endereço, telefone ou sobrenome. Em foto, mostre a ação e o lugar, não o rosto de ninguém.
+  </div>
+  <div class="card">
+    <label class="campo"><span>Sua mensagem</span>
+      <textarea id="mTexto" maxlength="500" placeholder="Conte para a turma o que você descobriu ou fez."></textarea></label>
+    <label class="campo"><span>Foto</span><small>Opcional. A imagem é reduzida automaticamente antes de subir.</small>
+      <input type="file" id="mImagem" accept="image/*"></label>
+    <img id="mPreview" hidden style="max-width:220px;border-radius:12px;margin-bottom:12px">
+    <div class="acoes">
+      <button class="btn" type="button" id="btnPublicar">Publicar no mural</button>
+      <span class="fonte-quadro" id="mStatus"></span>
+    </div>
+  </div>
+  <div id="listaMural"></div>
+</section>
+
+<!-- ============ ALUNO: ATIVIDADES ============ -->
+<section class="painel" id="p-atividades" role="tabpanel" hidden>
+  <h2 class="titulo">Atividades</h2>
+  <p class="linha-fina">Enviadas pelo professor. Sua resposta vai só para ele.</p>
+  <div id="listaAtividades"></div>
+</section>
+
+<!-- ============ PROFESSOR: TURMA ============ -->
+<section class="painel" id="p-turma" role="tabpanel" hidden>
+  <h2 class="titulo">Minha turma</h2>
+  <p class="linha-fina">Código de acesso, alunos conectados e meta coletiva.</p>
+  <div id="semTurma" hidden>
+    <div class="card">
+      <h3>Criar turma</h3>
+      <div class="linha-campos">
+        <label class="campo"><span>Nome da turma</span><input type="text" id="tNome" placeholder="Ex.: 5º ano B"></label>
+        <label class="campo"><span>Escola</span><input type="text" id="tEscola" placeholder="Nome da escola"></label>
+      </div>
+      <button class="btn" type="button" id="btnCriarTurma">Criar turma</button>
+    </div>
+  </div>
+  <div id="comTurma" hidden>
+    <div class="grid-2">
+      <div class="card">
+        <span class="etiqueta et-mar">Código de acesso</span>
+        <p class="codigo-turma" id="codigoTurma">—</p>
+        <p class="fonte-quadro">Escreva no quadro. O aluno digita o código, escolhe um apelido e entra. Nenhum aluno cria conta.</p>
+        <div class="acoes" style="margin-top:12px">
+          <button class="btn neutra mini" type="button" id="btnCopiarCodigo">Copiar código</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="etiqueta et-folha">Meta coletiva</span>
+        <div id="caixaMetaProf"></div>
+        <label class="campo" style="margin-top:12px"><span>Definir meta de ações da turma</span>
+          <input type="number" id="tMeta" min="1" max="100000" placeholder="Ex.: 200"></label>
+        <button class="btn sec mini" type="button" id="btnSalvarMeta">Salvar meta</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Alunos na turma <span class="selo s-lugar" id="contaAlunos">0</span></h3>
+      <div id="listaAlunos"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROFESSOR: PAINEL ============ -->
+<section class="painel" id="p-painel" role="tabpanel" hidden>
+  <h2 class="titulo">Painel da turma</h2>
+  <p class="linha-fina">Números agregados, calculados sobre os registros reais dos alunos.</p>
+  <div class="card"><div class="kpis" id="kpisProf"></div></div>
+  <div class="grid">
+    <div class="card"><h3>Ações por semana</h3><div class="grafico"><canvas id="gSemanaT"></canvas></div></div>
+    <div class="card"><h3>Por lugar</h3><div class="grafico"><canvas id="gLugarT"></canvas></div></div>
+  </div>
+  <div class="card">
+    <h3>Registros recentes</h3>
+    <div class="acoes" style="margin-bottom:14px">
+      <button class="btn neutra mini" type="button" id="btnCsvTurma">Baixar CSV da turma</button>
+      <button class="btn neutra mini" type="button" id="btnAtualizar">Atualizar</button>
+    </div>
+    <div id="listaTurmaRegistros"></div>
+  </div>
+</section>
+
+<!-- ============ PROFESSOR: ATIVIDADES ============ -->
+<section class="painel" id="p-gestao" role="tabpanel" hidden>
+  <h2 class="titulo">Atividades e desafio</h2>
+  <p class="linha-fina">Proponha uma atividade, leia as respostas e devolva um retorno.</p>
+  <div class="card">
+    <h3>Nova atividade</h3>
+    <label class="campo"><span>Título</span><input type="text" id="aTitulo" maxlength="90" placeholder="Ex.: Caça-vazamento em casa"></label>
+    <label class="campo"><span>Enunciado</span><textarea id="aEnunciado" maxlength="900" placeholder="O que o aluno deve fazer e registrar."></textarea></label>
+    <button class="btn" type="button" id="btnCriarAtividade">Enviar para a turma</button>
+  </div>
+  <div class="card">
+    <h3>Desafio da semana</h3>
+    <label class="campo"><span>Escolher desafio</span><select id="selDesafio"></select></label>
+    <button class="btn sec" type="button" id="btnSalvarDesafio">Ativar desafio</button>
+  </div>
+  <div id="listaGestaoAtividades"></div>
+</section>
+
+<!-- ============ PROFESSOR: MURAL ============ -->
+<section class="painel" id="p-moderar" role="tabpanel" hidden>
+  <h2 class="titulo">Mural da turma</h2>
+  <p class="linha-fina">Você pode remover qualquer publicação.</p>
+  <div id="listaMuralProf"></div>
+</section>
+
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<script>
+/* =======================================================================
+   DIÁRIO DAS ÁGUAS
+   Arquivo único. Firebase Authentication e Cloud Firestore.
+   Professor entra com e-mail e senha. Aluno entra com código de turma e
+   login anônimo, sem cadastro e sem dado pessoal.
+   ======================================================================= */
+
+/* ---- 1. COLE AQUI A CONFIGURAÇÃO DO SEU PROJETO FIREBASE ---- */
+var firebaseConfig = {
+  apiKey: "AIzaSyBAahGbr1bsjTq0_5BB-xKQa1cKru3biiA",
+  authDomain: "diario-das-aguas-cac14.firebaseapp.com",
+  projectId: "diario-das-aguas-cac14",
+  storageBucket: "diario-das-aguas-cac14.firebasestorage.app",
+  messagingSenderId: "498554590251",
+  appId: "1:498554590251:web:748e3e4849730feb91466e"
+};
+/* ------------------------------------------------------------- */
+
+var app = null, auth = null, db = null, firebaseOk = false;
+try{
+  if(firebaseConfig.apiKey && firebaseConfig.apiKey.indexOf("COLE_AQUI") === -1){
+    app = firebase.initializeApp(firebaseConfig);
+    auth = firebase.auth();
+    db = firebase.firestore();
+    firebaseOk = true;
+  }
+}catch(e){ console.error("Falha ao iniciar o Firebase:", e); }
+
+var LUGARES = ["Casa","Escola","Comunidade"];
+
+var DESAFIOS = [
+  {id:"torneira", emoji:"🪥", titulo:"Torneira fechada",
+   texto:"Durante toda a semana, feche a torneira enquanto escova os dentes e enquanto ensaboa a louça. Registre cada dia."},
+  {id:"banho", emoji:"🚿", titulo:"Banho de cinco minutos",
+   texto:"Marque o tempo do seu banho e tente ficar em cinco minutos. Registre quantos dias conseguiu."},
+  {id:"vazamento", emoji:"🔧", titulo:"Caça-vazamento",
+   texto:"Procure vazamentos em casa e na escola: torneira pingando, descarga correndo, cano molhado. Registre o que encontrou."},
+  {id:"chuva", emoji:"🌧️", titulo:"Água da chuva",
+   texto:"Junte água da chuva em um balde e use para regar planta ou lavar o quintal. Registre quantas vezes usou."},
+  {id:"balde", emoji:"🪣", titulo:"Balde no lugar da mangueira",
+   texto:"Toda lavagem da semana, calçada, carro, quintal, com balde. Nunca com mangueira aberta."},
+  {id:"nascente", emoji:"🌿", titulo:"Observar o curso d'água",
+   texto:"Visite um córrego, rio ou nascente perto de você. Observe a cor, o cheiro, o lixo e a mata na margem. Registre o que viu."},
+  {id:"convencer", emoji:"👨‍👩‍👧‍👦", titulo:"Convencer alguém",
+   texto:"Explique para uma pessoa da sua casa por que economizar água importa, e registre o que ela respondeu."}
+];
+
+var CONQUISTAS = [
+  {id:"primeira", emoji:"🌱", nome:"Primeiro passo", desc:"Fez o primeiro registro",
+   ok:function(r){ return r.length >= 1; }},
+  {id:"cinco", emoji:"💧", nome:"Cinco ações", desc:"Registrou 5 ações",
+   ok:function(r){ return r.length >= 5; }},
+  {id:"quinze", emoji:"🌊", nome:"Quinze ações", desc:"Registrou 15 ações",
+   ok:function(r){ return r.length >= 15; }},
+  {id:"trinta", emoji:"🏆", nome:"Trinta ações", desc:"Registrou 30 ações",
+   ok:function(r){ return r.length >= 30; }},
+  {id:"lugares", emoji:"🗺️", nome:"Três lugares", desc:"Agiu em casa, escola e comunidade",
+   ok:function(r){ var s = {}; r.forEach(function(x){ s[x.lugar]=1; }); return LUGARES.every(function(l){ return s[l]; }); }},
+  {id:"tres_dias", emoji:"📅", nome:"Três dias seguidos", desc:"Registrou em 3 dias consecutivos",
+   ok:function(r){ return maiorSequencia(r) >= 3; }},
+  {id:"sete_dias", emoji:"🔥", nome:"Uma semana inteira", desc:"Registrou em 7 dias consecutivos",
+   ok:function(r){ return maiorSequencia(r) >= 7; }},
+  {id:"cumpriu", emoji:"✅", nome:"Promessa cumprida", desc:"Transformou um a fazer em feito",
+   ok:function(r){ return r.some(function(x){ return x.cumprida === true; }); }},
+  {id:"mural", emoji:"📣", nome:"Voz na turma", desc:"Publicou no mural",
+   ok:function(r, extra){ return extra && extra.publicou; }}
+];
+
+function maiorSequencia(regs){
+  var dias = {};
+  regs.forEach(function(r){ if(r.data) dias[r.data] = 1; });
+  var lista = Object.keys(dias).sort();
+  if(!lista.length) return 0;
+  var melhor = 1, atual = 1;
+  for(var i=1;i<lista.length;i++){
+    var a = new Date(lista[i-1] + "T00:00:00"), b = new Date(lista[i] + "T00:00:00");
+    var dif = Math.round((b - a) / 86400000);
+    if(dif === 1){ atual++; if(atual > melhor) melhor = atual; } else { atual = 1; }
+  }
+  return melhor;
+}
+
+/* ============ ESTADO ============ */
+var S = {
+  papel: null,        // "aluno" ou "professor"
+  uid: null,
+  apelido: "",
+  codigo: "",
+  turma: null,
+  registros: [],
+  mural: [],
+  atividades: [],
+  respostas: {},
+  alunos: [],
+  registrosTurma: [],
+  publicou: false
+};
+var graficos = {};
+var escolhido = {lugar:"Casa", tipo:"Feito", emoji:"💧"};
+var EMOJIS = ["💧","🚿","🪥","🪣","🌧️","🌿","🧼","🏫","🏠","🚰","🔧","🐟"];
+
+/* ============ AUXILIARES ============ */
+function $(id){ return document.getElementById(id); }
+function esc(s){
+  return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+function hoje(){
+  var d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+  return d.toISOString().slice(0,10);
+}
+function dataBr(iso){
+  if(!iso) return "—";
+  var p = String(iso).split("-");
+  return p.length === 3 ? p[2] + "/" + p[1] + "/" + p[0] : iso;
+}
+var tToast = null;
+function toast(msg){
+  var el = $("toast"); el.textContent = msg; el.classList.add("ver");
+  clearTimeout(tToast); tToast = setTimeout(function(){ el.classList.remove("ver"); }, 2200);
+}
+function erroEntrada(msg){
+  var el = $("erroEntrada");
+  if(!msg){ el.hidden = true; return; }
+  el.hidden = false; el.textContent = msg;
+}
+function traduzErro(e){
+  var c = (e && e.code) || "";
+  if(c.indexOf("email-already-in-use") > -1) return "Esse e-mail já tem conta. Use Entrar.";
+  if(c.indexOf("invalid-email") > -1) return "E-mail inválido.";
+  if(c.indexOf("weak-password") > -1) return "A senha precisa de pelo menos seis caracteres.";
+  if(c.indexOf("wrong-password") > -1 || c.indexOf("invalid-credential") > -1) return "E-mail ou senha incorretos.";
+  if(c.indexOf("user-not-found") > -1) return "Não existe conta com esse e-mail. Use Criar conta.";
+  if(c.indexOf("too-many-requests") > -1) return "Muitas tentativas. Espere um minuto e tente de novo.";
+  if(c.indexOf("permission-denied") > -1) return "Sem permissão. Confira as regras do Firestore.";
+  if(c.indexOf("operation-not-allowed") > -1) return "Método de login desativado no console do Firebase.";
+  return (e && e.message) ? e.message : "Não foi possível concluir.";
+}
+function gerarCodigo(){
+  var alfabeto = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789", s = "";
+  for(var i=0;i<6;i++) s += alfabeto[Math.floor(Math.random()*alfabeto.length)];
+  return s;
+}
+function baixar(conteudo, nome, tipo){
+  var blob = new Blob(["\ufeff" + conteudo], {type: tipo + ";charset=utf-8"});
+  var url = URL.createObjectURL(blob), a = document.createElement("a");
+  a.href = url; a.download = nome; document.body.appendChild(a); a.click();
+  document.body.removeChild(a); setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+}
+function csv(linhas){
+  return linhas.map(function(l){
+    return l.map(function(c){ return '"' + String(c == null ? "" : c).replace(/"/g,'""') + '"'; }).join(";");
+  }).join("\n");
+}
+
+/* Reduz a imagem no próprio aparelho antes de subir.
+   Documento do Firestore tem teto de 1 MB, então a foto precisa caber com folga. */
+var LIMITE_IMG = 170 * 1024;
+function comprimirImagem(arquivo){
+  return new Promise(function(resolve, reject){
+    if(!/^image\//.test(arquivo.type)) return reject(new Error("O arquivo não é uma imagem."));
+    var leitor = new FileReader();
+    leitor.onerror = function(){ reject(new Error("Não foi possível ler o arquivo.")); };
+    leitor.onload = function(){
+      var img = new Image();
+      img.onerror = function(){ reject(new Error("Imagem inválida.")); };
+      img.onload = function(){
+        var maxLado = 900;
+        var escala = Math.min(1, maxLado / Math.max(img.width, img.height));
+        var c = document.createElement("canvas");
+        c.width = Math.round(img.width * escala);
+        c.height = Math.round(img.height * escala);
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        var q = 0.82, saida = c.toDataURL("image/jpeg", q);
+        while(saida.length > LIMITE_IMG && q > 0.35){
+          q -= 0.12; saida = c.toDataURL("image/jpeg", q);
+        }
+        if(saida.length > LIMITE_IMG) return reject(new Error("A imagem continua grande demais. Tente outra foto."));
+        resolve(saida);
+      };
+      img.src = leitor.result;
+    };
+    leitor.readAsDataURL(arquivo);
+  });
+}
+</script>
+<script>
+/* ============ CAMINHOS NO FIRESTORE ============ */
+function refTurma(cod){ return db.collection("turmas").doc(cod); }
+function refAlunos(cod){ return refTurma(cod).collection("alunos"); }
+function refRegistros(cod){ return refTurma(cod).collection("registros"); }
+function refMural(cod){ return refTurma(cod).collection("mural"); }
+function refAtividades(cod){ return refTurma(cod).collection("atividades"); }
+function refRespostas(cod){ return refTurma(cod).collection("respostas"); }
+
+/* ============ ENTRADA ============ */
+function iniciarEntrada(){
+  $("modoAluno").addEventListener("click", function(){ trocarModo("aluno"); });
+  $("modoProf").addEventListener("click", function(){ trocarModo("professor"); });
+  $("btnEntrarAluno").addEventListener("click", entrarComoAluno);
+  $("btnEntrarProf").addEventListener("click", function(){ autenticarProfessor(false); });
+  $("btnCriarProf").addEventListener("click", function(){ autenticarProfessor(true); });
+  $("inCodigo").addEventListener("input", function(e){ e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,""); });
+  $("inApelido").addEventListener("keydown", function(e){ if(e.key === "Enter") entrarComoAluno(); });
+  $("inSenha").addEventListener("keydown", function(e){ if(e.key === "Enter") autenticarProfessor(false); });
+  if(!firebaseOk){
+    erroEntrada("A configuração do Firebase ainda não foi preenchida neste arquivo. Abra o index.html, localize firebaseConfig e cole os dados do seu projeto.");
+    $("btnEntrarAluno").disabled = true;
+    $("btnEntrarProf").disabled = true;
+    $("btnCriarProf").disabled = true;
+  }
+}
+
+function trocarModo(modo){
+  var aluno = modo === "aluno";
+  $("modoAluno").setAttribute("aria-pressed", aluno ? "true" : "false");
+  $("modoProf").setAttribute("aria-pressed", aluno ? "false" : "true");
+  $("formAluno").hidden = !aluno;
+  $("formProf").hidden = aluno;
+  erroEntrada("");
+}
+
+async function entrarComoAluno(){
+  erroEntrada("");
+  var cod = $("inCodigo").value.trim().toUpperCase();
+  var ape = $("inApelido").value.trim();
+  if(cod.length !== 6) return erroEntrada("O código da turma tem seis caracteres.");
+  if(ape.length < 2) return erroEntrada("Escreva como você quer ser chamado.");
+  if(/\s\S+\s\S+/.test(ape)) return erroEntrada("Use só o primeiro nome ou um apelido.");
+  $("btnEntrarAluno").disabled = true;
+  $("statusEntrada").textContent = "Entrando…";
+  try{
+    var doc = await refTurma(cod).get();
+    if(!doc.exists) throw new Error("codigo");
+    var cred = await auth.signInAnonymously();
+    S.papel = "aluno"; S.uid = cred.user.uid; S.apelido = ape; S.codigo = cod; S.turma = doc.data();
+    await refAlunos(cod).doc(S.uid).set({
+      apelido: ape,
+      ultimoAcesso: firebase.firestore.FieldValue.serverTimestamp()
+    }, {merge:true});
+    localStorage.setItem("diario_apelido", ape);
+    localStorage.setItem("diario_codigo", cod);
+    await abrirApp();
+  }catch(e){
+    if(e.message !== "codigo") console.error(e);
+    erroEntrada(e.message === "codigo" ? "Não encontrei turma com esse código. Confira com o professor." : traduzErro(e));
+  }finally{
+    $("btnEntrarAluno").disabled = false;
+    $("statusEntrada").textContent = "";
+  }
+}
+
+async function autenticarProfessor(criar){
+  erroEntrada("");
+  var email = $("inEmail").value.trim(), senha = $("inSenha").value;
+  if(!email || !senha) return erroEntrada("Preencha e-mail e senha.");
+  if(criar && senha.length < 6) return erroEntrada("A senha precisa de pelo menos seis caracteres.");
+  $("btnEntrarProf").disabled = true; $("btnCriarProf").disabled = true;
+  $("statusEntrada").textContent = criar ? "Criando conta…" : "Entrando…";
+  try{
+    if(criar) await auth.createUserWithEmailAndPassword(email, senha);
+    else await auth.signInWithEmailAndPassword(email, senha);
+    S.papel = "professor"; S.uid = auth.currentUser.uid; S.apelido = email.split("@")[0];
+    await carregarTurmaDoProfessor();
+    await abrirApp();
+  }catch(e){
+    console.error(e); erroEntrada(traduzErro(e));
+  }finally{
+    $("btnEntrarProf").disabled = false; $("btnCriarProf").disabled = false;
+    $("statusEntrada").textContent = "";
+  }
+}
+
+/* A turma do professor fica guardada no documento dele.
+   Assim nenhuma conta precisa de permissão para listar a coleção de turmas,
+   o que impediria um aluno de enumerar as turmas de outras escolas. */
+async function carregarTurmaDoProfessor(){
+  S.codigo = ""; S.turma = null;
+  var meu = await db.collection("professores").doc(S.uid).get();
+  if(!meu.exists || !meu.data().codigo) return;
+  var turma = await refTurma(meu.data().codigo).get();
+  if(turma.exists){ S.codigo = meu.data().codigo; S.turma = turma.data(); }
+}
+
+function sair(){
+  if(auth) auth.signOut();
+  location.reload();
+}
+
+/* ============ ABAS ============ */
+var ABAS_ALUNO = [
+  {id:"descobrir", rot:"🔎 Descobrir"},
+  {id:"registro", rot:"✍️ Registrar"}, {id:"diario", rot:"📒 Meu diário"},
+  {id:"progresso", rot:"📈 Progresso"}, {id:"mural", rot:"📣 Mural"},
+  {id:"atividades", rot:"📘 Atividades"}
+];
+var ABAS_PROF = [
+  {id:"turma", rot:"👥 Turma"},
+  {id:"descobrir", rot:"🔎 Descobrir"}, {id:"painel", rot:"📊 Painel"},
+  {id:"gestao", rot:"📘 Atividades"}, {id:"moderar", rot:"📣 Mural"}
+];
+
+function montarAbas(){
+  var lista = S.papel === "professor" ? ABAS_PROF : ABAS_ALUNO;
+  var cx = document.querySelector(".abas");
+  cx.innerHTML = "";
+  lista.forEach(function(a, i){
+    var b = document.createElement("button");
+    b.className = "aba"; b.type = "button"; b.setAttribute("role","tab");
+    b.setAttribute("aria-selected", i === 0 ? "true" : "false");
+    b.dataset.alvo = a.id; b.textContent = a.rot;
+    b.addEventListener("click", function(){ abrirAba(a.id); });
+    cx.appendChild(b);
+  });
+  abrirAba(lista[0].id);
+}
+
+function abrirAba(id){
+  document.querySelectorAll(".aba").forEach(function(b){
+    b.setAttribute("aria-selected", b.dataset.alvo === id ? "true" : "false");
+  });
+  document.querySelectorAll(".painel").forEach(function(p){ p.hidden = true; });
+  var alvo = $("p-" + id);
+  if(alvo) alvo.hidden = false;
+  window.scrollTo({top:0, behavior:"instant"});
+  if(id === "progresso") desenharGraficosAluno();
+  if(id === "painel") desenharGraficosTurma();
+}
+
+/* ============ ABERTURA DO APP ============ */
+async function abrirApp(){
+  $("entrada").hidden = true;
+  $("topo").hidden = false; $("nav").hidden = false; $("conteudo").hidden = false;
+  $("cracha").textContent = S.papel === "professor" ? "Professor" : S.apelido;
+  $("subTurma").textContent = S.turma
+    ? (S.turma.nome || "Turma") + (S.turma.escola ? " · " + S.turma.escola : "") + " · código " + S.codigo
+    : "Nenhuma turma ainda";
+  montarAbas();
+  if(S.papel === "aluno"){
+    $("rData").value = hoje();
+    await Promise.all([carregarRegistrosAluno(), carregarMural(), carregarAtividades()]);
+    renderDesafio(); renderMeta();
+  } else {
+    $("semTurma").hidden = !!S.codigo;
+    $("comTurma").hidden = !S.codigo;
+    montarSelDesafio();
+    if(S.codigo) await carregarTudoProfessor();
+  }
+}
+
+/* ============ ALUNO: REGISTROS ============ */
+async function carregarRegistrosAluno(){
+  try{
+    var snap = await refRegistros(S.codigo).where("uid","==",S.uid).get();
+    S.registros = snap.docs.map(function(d){ var o = d.data(); o.id = d.id; return o; });
+    S.registros.sort(function(a,b){ return (b.data || "").localeCompare(a.data || ""); });
+    renderRegistros();
+  }catch(e){ console.error(e); toast("Não consegui carregar seus registros."); }
+}
+
+async function salvarRegistro(){
+  var titulo = $("rTitulo").value.trim();
+  if(!titulo) return toast("Escreva o que você fez.");
+  var dado = {
+    uid: S.uid, apelido: S.apelido,
+    data: $("rData").value || hoje(),
+    lugar: escolhido.lugar, tipo: escolhido.tipo,
+    titulo: titulo, emoji: escolhido.emoji,
+    notas: $("rNotas").value.trim(), cumprida: false,
+    criadoEm: firebase.firestore.FieldValue.serverTimestamp()
+  };
+  $("btnSalvarReg").disabled = true;
+  try{
+    var ref = await refRegistros(S.codigo).add(dado);
+    dado.id = ref.id; dado.criadoEm = null;
+    if(dado.tipo === "Feito") await somarNaMeta(1);
+    S.registros.unshift(dado);
+    S.registros.sort(function(a,b){ return (b.data || "").localeCompare(a.data || ""); });
+    $("rTitulo").value = ""; $("rNotas").value = "";
+    renderRegistros(); renderMeta();
+    toast("Ação registrada");
+  }catch(e){ console.error(e); toast(traduzErro(e)); }
+  finally{ $("btnSalvarReg").disabled = false; }
+}
+
+/* O total da turma muda de forma atômica, para a barra da meta andar na hora
+   para todo mundo. O professor recalcula o valor exato ao abrir o painel. */
+async function somarNaMeta(n){
+  try{
+    await refTurma(S.codigo).update({totalTurma: firebase.firestore.FieldValue.increment(n)});
+    if(S.turma) S.turma.totalTurma = Math.max(0, (S.turma.totalTurma || 0) + n);
+  }catch(e){ console.error("Não consegui atualizar a meta da turma:", e); }
+}
+
+async function alterarRegistro(id, mudancas){
+  try{
+    await refRegistros(S.codigo).doc(id).update(mudancas);
+    if(mudancas.tipo === "Feito") await somarNaMeta(1);
+    var r = S.registros.filter(function(x){ return x.id === id; })[0];
+    if(r) Object.keys(mudancas).forEach(function(k){ r[k] = mudancas[k]; });
+    renderRegistros(); renderMeta();
+  }catch(e){ console.error(e); toast(traduzErro(e)); }
+}
+
+async function apagarRegistro(id){
+  if(!confirm("Apagar este registro?")) return;
+  var alvo = S.registros.filter(function(x){ return x.id === id; })[0];
+  try{
+    await refRegistros(S.codigo).doc(id).delete();
+    if(alvo && alvo.tipo === "Feito") await somarNaMeta(-1);
+    S.registros = S.registros.filter(function(x){ return x.id !== id; });
+    renderRegistros(); renderMeta(); toast("Registro apagado");
+  }catch(e){ console.error(e); toast(traduzErro(e)); }
+}
+
+function registrosFiltrados(){
+  var q = ($("fBusca") ? $("fBusca").value : "").trim().toLowerCase();
+  var lg = $("fLugar") ? $("fLugar").value : "";
+  var tp = $("fTipo") ? $("fTipo").value : "";
+  return S.registros.filter(function(r){
+    if(lg && r.lugar !== lg) return false;
+    if(tp && r.tipo !== tp) return false;
+    if(q && (r.titulo + " " + (r.notas || "")).toLowerCase().indexOf(q) === -1) return false;
+    return true;
+  });
+}
+
+function renderRegistros(){
+  var cx = $("listaRegistros");
+  var lista = registrosFiltrados();
+  if(!lista.length){
+    cx.innerHTML = '<div class="vazio">Nenhum registro por aqui ainda. Comece pela aba Registrar.</div>';
+    return;
+  }
+  // agrupa por data, para o diário virar linha do tempo e não lista solta
+  var dias = [], porDia = {};
+  lista.forEach(function(r){
+    var d = r.data || "sem data";
+    if(!porDia[d]){ porDia[d] = []; dias.push(d); }
+    porDia[d].push(r);
+  });
+  cx.innerHTML = "";
+  dias.forEach(function(dia){
+    var bloco = document.createElement("div");
+    bloco.className = "dia";
+    var n = porDia[dia].length;
+    var cab = document.createElement("div");
+    cab.className = "dia-cab";
+    cab.innerHTML = '<span class="dia-data">' + dataBr(dia) + "</span>" +
+                    '<span class="dia-conta">' + n + (n === 1 ? " ação" : " ações") + "</span>";
+    bloco.appendChild(cab);
+    porDia[dia].forEach(function(r){ bloco.appendChild(cartaoRegistro(r)); });
+    cx.appendChild(bloco);
+  });
+}
+
+function cartaoRegistro(r){
+  var d = document.createElement("div");
+  d.className = "reg";
+  var selo = r.tipo === "Feito"
+    ? '<span class="selo s-feito">Feito</span>'
+    : '<span class="selo s-fazer">A fazer</span>';
+  d.innerHTML =
+    '<div class="ico">' + esc(r.emoji || "💧") + '</div>' +
+    '<div><div class="tit">' + esc(r.titulo) + '</div>' +
+    '<div style="margin-top:7px">' + selo + ' <span class="selo s-lugar">' + esc(r.lugar) + '</span></div>' +
+    (r.notas ? '<div class="meta" style="margin-top:7px">' + esc(r.notas) + "</div>" : "") +
+    "</div><div class='ops'></div>";
+  var ops = d.querySelector(".ops");
+  if(r.tipo === "A fazer"){
+    var bt = document.createElement("button");
+    bt.className = "btn sec mini"; bt.type = "button"; bt.textContent = "Concluir";
+    bt.addEventListener("click", function(){ alterarRegistro(r.id, {tipo:"Feito", cumprida:true}); });
+    ops.appendChild(bt);
+  }
+  var bx = document.createElement("button");
+  bx.className = "btn perigo mini"; bx.type = "button"; bx.textContent = "Apagar";
+  bx.addEventListener("click", function(){ apagarRegistro(r.id); });
+  ops.appendChild(bx);
+  return d;
+}
+
+</script>
+<script>
+/* ============ DESAFIO E META ============ */
+function desafioAtual(){
+  var id = S.turma && S.turma.desafio;
+  return DESAFIOS.filter(function(d){ return d.id === id; })[0] || null;
+}
+function renderDesafio(){
+  var d = desafioAtual(), cx = $("caixaDesafio");
+  if(!d){ cx.innerHTML = '<div class="vazio">O professor ainda não ativou um desafio.</div>'; return; }
+  var feitos = S.registros.filter(function(r){ return r.tipo === "Feito"; }).length;
+  cx.innerHTML =
+    '<h3 style="margin:0 0 8px">' + d.emoji + " " + esc(d.titulo) + "</h3>" +
+    "<p style='margin:0 0 12px'>" + esc(d.texto) + "</p>" +
+    '<button class="btn sec mini" type="button" id="btnUsarDesafio">Registrar esta ação</button>';
+  $("btnUsarDesafio").addEventListener("click", function(){
+    abrirAba("registro");
+    $("rTitulo").value = d.titulo;
+    marcarEmoji(d.emoji);
+    $("rTitulo").focus();
+  });
+}
+
+function renderMeta(){
+  var cx = $("caixaMeta");
+  if(!cx) return;
+  var meta = (S.turma && S.turma.meta) || 0;
+  if(!meta){ cx.innerHTML = '<div class="vazio">O professor ainda não definiu a meta da turma.</div>'; return; }
+  var total = (S.turma && typeof S.turma.totalTurma === "number") ? S.turma.totalTurma : null;
+  var meus = S.registros.filter(function(r){ return r.tipo === "Feito"; }).length;
+  var usado = total == null ? meus : total;
+  var pct = Math.min(100, Math.round(usado / meta * 100));
+  cx.innerHTML =
+    '<div class="barra"><i style="width:' + pct + '%"></i></div>' +
+    '<div class="barra-rot"><span>' + usado + " de " + meta + " ações</span><span>" + pct + "%</span></div>" +
+    '<p class="fonte-quadro">' + (total == null
+      ? "A turma soma junto. Suas " + meus + " ações concluídas entram nesse total."
+      : "Total da turma. Suas ações concluídas: " + meus + ".") + "</p>";
+}
+
+/* ============ CONQUISTAS E GRÁFICOS DO ALUNO ============ */
+function renderConquistas(){
+  var cx = $("conquistas");
+  cx.innerHTML = "";
+  CONQUISTAS.forEach(function(c){
+    var ganha = false;
+    try{ ganha = !!c.ok(S.registros, {publicou: S.publicou}); }catch(e){ ganha = false; }
+    var d = document.createElement("div");
+    d.className = "conq" + (ganha ? " ganha" : "");
+    d.innerHTML = '<span class="emo">' + c.emoji + '</span><span class="nom">' + esc(c.nome) +
+                  '</span><span class="des">' + esc(c.desc) + "</span>";
+    cx.appendChild(d);
+  });
+}
+
+function semanasRecentes(n){
+  var out = [], base = new Date();
+  base.setHours(0,0,0,0);
+  base.setDate(base.getDate() - base.getDay());
+  for(var i=n-1;i>=0;i--){
+    var ini = new Date(base); ini.setDate(base.getDate() - i*7);
+    var fim = new Date(ini); fim.setDate(ini.getDate() + 6);
+    out.push({ini:ini, fim:fim, rot:("0"+ini.getDate()).slice(-2) + "/" + ("0"+(ini.getMonth()+1)).slice(-2)});
+  }
+  return out;
+}
+function contarPorSemana(regs, n){
+  var sem = semanasRecentes(n);
+  var vals = sem.map(function(s){
+    return regs.filter(function(r){
+      if(!r.data) return false;
+      var d = new Date(r.data + "T00:00:00");
+      return d >= s.ini && d <= s.fim;
+    }).length;
+  });
+  return {rotulos: sem.map(function(s){ return s.rot; }), valores: vals};
+}
+function contarPorLugar(regs){
+  return LUGARES.map(function(l){ return regs.filter(function(r){ return r.lugar === l; }).length; });
+}
+
+var CORES = ["#0B6E8A","#2E8B57","#E4A11B"];
+function grafico(chave, canvasId, tipo, dados, opcoes){
+  if(typeof Chart === "undefined") return;
+  var el = $(canvasId); if(!el) return;
+  if(graficos[chave]) graficos[chave].destroy();
+  graficos[chave] = new Chart(el.getContext("2d"), {type:tipo, data:dados, options:opcoes});
+}
+var OPC_BARRA = {
+  responsive:true, maintainAspectRatio:false,
+  plugins:{legend:{display:false}},
+  scales:{y:{beginAtZero:true, ticks:{precision:0, font:{size:13}}}, x:{ticks:{font:{size:13}}}}
+};
+var OPC_ROSCA = {
+  responsive:true, maintainAspectRatio:false,
+  plugins:{legend:{position:"bottom", labels:{font:{size:13}, padding:14, boxWidth:14}}}
+};
+
+function kpi(rot, val){ return '<div class="kpi"><h4>' + rot + "</h4><p>" + val + "</p></div>"; }
+
+function desenharGraficosAluno(){
+  var feitos = S.registros.filter(function(r){ return r.tipo === "Feito"; });
+  var afazer = S.registros.filter(function(r){ return r.tipo === "A fazer"; });
+  $("kpisAluno").innerHTML =
+    kpi("Ações feitas", feitos.length) + kpi("A fazer", afazer.length) +
+    kpi("Dias seguidos", maiorSequencia(S.registros)) +
+    kpi("Lugares", LUGARES.filter(function(l){ return S.registros.some(function(r){ return r.lugar === l; }); }).length + " de 3");
+  var sem = contarPorSemana(S.registros, 8);
+  grafico("aSem","gSemana","bar",
+    {labels:sem.rotulos, datasets:[{label:"Ações", data:sem.valores, backgroundColor:"#0B6E8A", borderRadius:8}]},
+    OPC_BARRA);
+  grafico("aLug","gLugar","doughnut",
+    {labels:LUGARES, datasets:[{data:contarPorLugar(S.registros), backgroundColor:CORES, borderWidth:0}]},
+    OPC_ROSCA);
+  renderConquistas();
+}
+
+/* ============ MURAL ============ */
+async function carregarMural(){
+  try{
+    var snap = await refMural(S.codigo).orderBy("criadoEm","desc").limit(60).get();
+    S.mural = snap.docs.map(function(d){ var o = d.data(); o.id = d.id; return o; });
+    S.publicou = S.mural.some(function(p){ return p.uid === S.uid; });
+    renderMural();
+  }catch(e){
+    console.error(e);
+    var alvo = S.papel === "professor" ? $("listaMuralProf") : $("listaMural");
+    if(alvo) alvo.innerHTML = '<div class="aviso erro">Não consegui carregar o mural. ' + esc(traduzErro(e)) + "</div>";
+  }
+}
+
+async function publicar(){
+  var texto = $("mTexto").value.trim();
+  if(!texto) return toast("Escreva uma mensagem.");
+  var arquivo = $("mImagem").files[0];
+  $("btnPublicar").disabled = true;
+  $("mStatus").textContent = arquivo ? "Reduzindo a imagem…" : "Publicando…";
+  try{
+    var imagem = "";
+    if(arquivo) imagem = await comprimirImagem(arquivo);
+    $("mStatus").textContent = "Publicando…";
+    var dado = {uid:S.uid, apelido:S.apelido, texto:texto, imagem:imagem,
+                criadoEm: firebase.firestore.FieldValue.serverTimestamp()};
+    await refMural(S.codigo).add(dado);
+    $("mTexto").value = ""; $("mImagem").value = ""; $("mPreview").hidden = true;
+    await carregarMural();
+    toast("Publicado no mural");
+  }catch(e){ console.error(e); toast(e.message || traduzErro(e)); }
+  finally{ $("btnPublicar").disabled = false; $("mStatus").textContent = ""; }
+}
+
+async function apagarPost(id){
+  if(!confirm("Remover esta publicação do mural?")) return;
+  try{
+    await refMural(S.codigo).doc(id).delete();
+    await carregarMural(); toast("Publicação removida");
+  }catch(e){ console.error(e); toast(traduzErro(e)); }
+}
+
+function renderMural(){
+  var cx = S.papel === "professor" ? $("listaMuralProf") : $("listaMural");
+  if(!cx) return;
+  if(!S.mural.length){
+    cx.innerHTML = '<div class="vazio">O mural está vazio. Seja o primeiro a contar algo para a turma.</div>';
+    return;
+  }
+  cx.innerHTML = "";
+  S.mural.forEach(function(p){
+    var d = document.createElement("div");
+    d.className = "post";
+    var quando = p.criadoEm && p.criadoEm.toDate ? p.criadoEm.toDate().toLocaleDateString("pt-BR") : "agora";
+    d.innerHTML =
+      '<div class="cab"><span class="autor">' + esc(p.apelido || "Alguém") + "</span>" +
+      '<span class="quando">' + quando + "</span></div>" +
+      "<p style='margin:9px 0 0'>" + esc(p.texto) + "</p>" +
+      (p.imagem ? '<img src="' + p.imagem + '" alt="Foto enviada por ' + esc(p.apelido || "aluno") + '">' : "");
+    if(S.papel === "professor" || p.uid === S.uid){
+      var b = document.createElement("button");
+      b.className = "btn perigo mini"; b.type = "button"; b.textContent = "Remover";
+      b.style.marginTop = "11px";
+      b.addEventListener("click", function(){ apagarPost(p.id); });
+      d.appendChild(b);
+    }
+    cx.appendChild(d);
+  });
+}
+
+/* ============ ATIVIDADES, LADO DO ALUNO ============ */
+async function carregarAtividades(){
+  try{
+    var snap = await refAtividades(S.codigo).orderBy("criadoEm","desc").get();
+    S.atividades = snap.docs.map(function(d){ var o = d.data(); o.id = d.id; return o; });
+    var minhas = await refRespostas(S.codigo).where("uid","==",S.uid).get();
+    S.respostas = {};
+    minhas.docs.forEach(function(d){ var o = d.data(); o.id = d.id; S.respostas[o.atividadeId] = o; });
+    renderAtividadesAluno();
+  }catch(e){
+    console.error(e);
+    $("listaAtividades").innerHTML = '<div class="aviso erro">Não consegui carregar as atividades. ' + esc(traduzErro(e)) + "</div>";
+  }
+}
+
+function renderAtividadesAluno(){
+  var cx = $("listaAtividades");
+  if(!S.atividades.length){
+    cx.innerHTML = '<div class="vazio">Nenhuma atividade enviada até agora.</div>';
+    return;
+  }
+  cx.innerHTML = "";
+  S.atividades.forEach(function(a){
+    var r = S.respostas[a.id];
+    var d = document.createElement("div");
+    d.className = "card";
+    d.innerHTML =
+      '<span class="etiqueta et-uva">Atividade</span><h3>' + esc(a.titulo) + "</h3>" +
+      "<p>" + esc(a.enunciado) + "</p>" +
+      (r && r.feedback ? '<div class="aviso info" style="margin:14px 0 0"><b>Retorno do professor</b>' + esc(r.feedback) + "</div>" : "");
+    var lab = document.createElement("label");
+    lab.className = "campo"; lab.style.marginTop = "14px";
+    lab.innerHTML = "<span>Sua resposta</span>";
+    var ta = document.createElement("textarea");
+    ta.maxLength = 2000;
+    ta.value = r ? (r.texto || "") : "";
+    ta.placeholder = "Escreva aqui.";
+    lab.appendChild(ta);
+    d.appendChild(lab);
+    var b = document.createElement("button");
+    b.className = "btn"; b.type = "button";
+    b.textContent = r ? "Atualizar resposta" : "Enviar resposta";
+    b.addEventListener("click", async function(){
+      var texto = ta.value.trim();
+      if(!texto) return toast("Escreva sua resposta.");
+      b.disabled = true;
+      try{
+        var id = S.uid + "_" + a.id;
+        await refRespostas(S.codigo).doc(id).set({
+          uid:S.uid, apelido:S.apelido, atividadeId:a.id, atividadeTitulo:a.titulo,
+          texto:texto, enviadoEm: firebase.firestore.FieldValue.serverTimestamp()
+        }, {merge:true});
+        S.respostas[a.id] = {uid:S.uid, atividadeId:a.id, texto:texto, feedback: r ? r.feedback : ""};
+        b.textContent = "Atualizar resposta";
+        toast("Resposta enviada");
+      }catch(e){ console.error(e); toast(traduzErro(e)); }
+      finally{ b.disabled = false; }
+    });
+    d.appendChild(b);
+    cx.appendChild(d);
+  });
+}
+</script>
+<script>
+/* ============ PROFESSOR ============ */
+async function criarTurma(){
+  var nome = $("tNome").value.trim(), escola = $("tEscola").value.trim();
+  if(!nome) return toast("Dê um nome à turma.");
+  $("btnCriarTurma").disabled = true;
+  try{
+    var cod = "", livre = false, tentativas = 0;
+    while(!livre && tentativas < 8){
+      cod = gerarCodigo();
+      var doc = await refTurma(cod).get();
+      livre = !doc.exists; tentativas++;
+    }
+    if(!livre) throw new Error("Não consegui gerar um código livre. Tente de novo.");
+    var dados = {nome:nome, escola:escola, professorUid:S.uid, meta:0, desafio:"", totalTurma:0,
+                 criadoEm: firebase.firestore.FieldValue.serverTimestamp()};
+    await refTurma(cod).set(dados);
+    await db.collection("professores").doc(S.uid).set({codigo: cod}, {merge:true});
+    S.codigo = cod; S.turma = dados;
+    $("semTurma").hidden = true; $("comTurma").hidden = false;
+    $("subTurma").textContent = nome + (escola ? " · " + escola : "") + " · código " + cod;
+    await carregarTudoProfessor();
+    toast("Turma criada com o código " + cod);
+  }catch(e){ console.error(e); toast(traduzErro(e)); }
+  finally{ $("btnCriarTurma").disabled = false; }
+}
+
+async function carregarTudoProfessor(){
+  $("codigoTurma").textContent = S.codigo;
+  $("listaAlunos").innerHTML = '<p class="carregando">Carregando…</p>';
+  try{
+    var alunosSnap = await refAlunos(S.codigo).get();
+    S.alunos = alunosSnap.docs.map(function(d){ var o = d.data(); o.uid = d.id; return o; });
+    var regsSnap = await refRegistros(S.codigo).get();
+    S.registrosTurma = regsSnap.docs.map(function(d){ var o = d.data(); o.id = d.id; return o; });
+    S.registrosTurma.sort(function(a,b){ return (b.data || "").localeCompare(a.data || ""); });
+    await atualizarTotalTurma();
+    renderAlunos(); renderMetaProf(); renderRegistrosTurma();
+    await Promise.all([carregarMural(), carregarGestaoAtividades()]);
+    if(!$("p-painel").hidden) desenharGraficosTurma();
+  }catch(e){
+    console.error(e);
+    $("listaAlunos").innerHTML = '<div class="aviso erro">' + esc(traduzErro(e)) + "</div>";
+  }
+}
+
+async function atualizarTotalTurma(){
+  var total = S.registrosTurma.filter(function(r){ return r.tipo === "Feito"; }).length;
+  if(S.turma && S.turma.totalTurma === total) return;
+  try{
+    await refTurma(S.codigo).update({totalTurma: total});
+    if(S.turma) S.turma.totalTurma = total;
+  }catch(e){ console.error(e); }
+}
+
+function renderAlunos(){
+  var cx = $("listaAlunos");
+  $("contaAlunos").textContent = S.alunos.length;
+  if(!S.alunos.length){
+    cx.innerHTML = '<div class="vazio">Ninguém entrou ainda. Passe o código para a turma.</div>';
+    return;
+  }
+  cx.innerHTML = "";
+  S.alunos.forEach(function(a){
+    var regs = S.registrosTurma.filter(function(r){ return r.uid === a.uid; });
+    var feitos = regs.filter(function(r){ return r.tipo === "Feito"; }).length;
+    var d = document.createElement("div");
+    d.className = "reg";
+    d.innerHTML =
+      '<div class="ico">🙂</div>' +
+      '<div><div class="tit">' + esc(a.apelido || "Sem apelido") + "</div>" +
+      '<div class="meta">' + regs.length + " registros, " + feitos + " concluídos</div></div>" +
+      '<div class="ops"></div>';
+    var b = document.createElement("button");
+    b.className = "btn sec mini"; b.type = "button"; b.textContent = "Ver";
+    b.addEventListener("click", function(){ verAluno(a); });
+    d.querySelector(".ops").appendChild(b);
+    cx.appendChild(d);
+  });
+}
+
+function verAluno(a){
+  var regs = S.registrosTurma.filter(function(r){ return r.uid === a.uid; });
+  var linhas = regs.map(function(r){
+    return "- " + dataBr(r.data) + " | " + r.tipo + " | " + r.lugar + " | " + r.titulo +
+           (r.notas ? " | " + r.notas : "");
+  }).join("\n");
+  alert("Aluno: " + (a.apelido || "sem apelido") + "\nRegistros: " + regs.length +
+        "\n\n" + (linhas || "Nenhum registro."));
+}
+
+function renderMetaProf(){
+  var cx = $("caixaMetaProf");
+  var meta = (S.turma && S.turma.meta) || 0;
+  var total = S.registrosTurma.filter(function(r){ return r.tipo === "Feito"; }).length;
+  if(!meta){
+    cx.innerHTML = '<p class="fonte-quadro" style="margin:0">Sem meta definida. A turma já concluiu ' + total + " ações.</p>";
+  } else {
+    var pct = Math.min(100, Math.round(total / meta * 100));
+    cx.innerHTML = '<div class="barra"><i style="width:' + pct + '%"></i></div>' +
+      '<div class="barra-rot"><span>' + total + " de " + meta + " ações</span><span>" + pct + "%</span></div>";
+  }
+  if($("tMeta")) $("tMeta").value = meta || "";
+}
+
+async function salvarMeta(){
+  var v = parseInt($("tMeta").value, 10);
+  if(!v || v < 1) return toast("Informe um número de ações.");
+  try{
+    await refTurma(S.codigo).update({meta: v});
+    S.turma.meta = v; renderMetaProf(); toast("Meta salva");
+  }catch(e){ console.error(e); toast(traduzErro(e)); }
+}
+
+function renderRegistrosTurma(){
+  var cx = $("listaTurmaRegistros");
+  if(!S.registrosTurma.length){
+    cx.innerHTML = '<div class="vazio">Nenhum registro da turma ainda.</div>';
+    return;
+  }
+  cx.innerHTML = "";
+  S.registrosTurma.slice(0, 40).forEach(function(r){
+    var d = document.createElement("div");
+    d.className = "reg";
+    d.innerHTML =
+      '<div class="ico">' + esc(r.emoji || "💧") + "</div>" +
+      '<div><div class="tit">' + esc(r.titulo) + "</div>" +
+      '<div class="meta">' + esc(r.apelido || "aluno") + " &middot; " + dataBr(r.data) + " &middot; " + esc(r.lugar) + "</div></div>" +
+      '<div class="ops"><span class="selo ' + (r.tipo === "Feito" ? "s-feito\">Feito" : "s-fazer\">A fazer") + "</span></div>";
+    cx.appendChild(d);
+  });
+  if(S.registrosTurma.length > 40){
+    var p = document.createElement("p");
+    p.className = "fonte-quadro";
+    p.textContent = "Mostrando os 40 mais recentes de " + S.registrosTurma.length + ". O CSV traz todos.";
+    cx.appendChild(p);
+  }
+}
+
+function desenharGraficosTurma(){
+  var feitos = S.registrosTurma.filter(function(r){ return r.tipo === "Feito"; });
+  var afazer = S.registrosTurma.filter(function(r){ return r.tipo === "A fazer"; });
+  var ativos = {};
+  S.registrosTurma.forEach(function(r){ ativos[r.uid] = 1; });
+  $("kpisProf").innerHTML =
+    kpi("Alunos na turma", S.alunos.length) +
+    kpi("Alunos que registraram", Object.keys(ativos).length) +
+    kpi("Ações concluídas", feitos.length) +
+    kpi("Ações a fazer", afazer.length);
+  var sem = contarPorSemana(S.registrosTurma, 8);
+  grafico("tSem","gSemanaT","bar",
+    {labels:sem.rotulos, datasets:[{label:"Ações", data:sem.valores, backgroundColor:"#0B6E8A", borderRadius:8}]},
+    OPC_BARRA);
+  grafico("tLug","gLugarT","doughnut",
+    {labels:LUGARES, datasets:[{data:contarPorLugar(S.registrosTurma), backgroundColor:CORES, borderWidth:0}]},
+    OPC_ROSCA);
+}
+
+/* ---- atividades, lado do professor ---- */
+function montarSelDesafio(){
+  var sel = $("selDesafio");
+  sel.innerHTML = '<option value="">Nenhum desafio ativo</option>';
+  DESAFIOS.forEach(function(d){
+    var o = document.createElement("option");
+    o.value = d.id; o.textContent = d.emoji + " " + d.titulo;
+    sel.appendChild(o);
+  });
+  if(S.turma && S.turma.desafio) sel.value = S.turma.desafio;
+}
+
+async function salvarDesafio(){
+  try{
+    await refTurma(S.codigo).update({desafio: $("selDesafio").value});
+    S.turma.desafio = $("selDesafio").value;
+    toast("Desafio atualizado");
+  }catch(e){ console.error(e); toast(traduzErro(e)); }
+}
+
+async function criarAtividade(){
+  var titulo = $("aTitulo").value.trim(), enunciado = $("aEnunciado").value.trim();
+  if(!titulo || !enunciado) return toast("Preencha título e enunciado.");
+  $("btnCriarAtividade").disabled = true;
+  try{
+    await refAtividades(S.codigo).add({titulo:titulo, enunciado:enunciado,
+      criadoEm: firebase.firestore.FieldValue.serverTimestamp()});
+    $("aTitulo").value = ""; $("aEnunciado").value = "";
+    await carregarGestaoAtividades();
+    toast("Atividade enviada para a turma");
+  }catch(e){ console.error(e); toast(traduzErro(e)); }
+  finally{ $("btnCriarAtividade").disabled = false; }
+}
+
+async function carregarGestaoAtividades(){
+  var cx = $("listaGestaoAtividades");
+  cx.innerHTML = '<p class="carregando">Carregando…</p>';
+  try{
+    var ativSnap = await refAtividades(S.codigo).orderBy("criadoEm","desc").get();
+    var respSnap = await refRespostas(S.codigo).get();
+    var respostas = respSnap.docs.map(function(d){ var o = d.data(); o.id = d.id; return o; });
+    cx.innerHTML = "";
+    if(!ativSnap.size){
+      cx.innerHTML = '<div class="vazio">Nenhuma atividade criada ainda.</div>';
+      return;
+    }
+    ativSnap.forEach(function(doc){
+      var a = doc.data(); a.id = doc.id;
+      var minhas = respostas.filter(function(r){ return r.atividadeId === a.id; });
+      var card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = '<span class="etiqueta et-uva">' + minhas.length + " respostas</span>" +
+                       "<h3>" + esc(a.titulo) + "</h3><p>" + esc(a.enunciado) + "</p>";
+      var apagar = document.createElement("button");
+      apagar.className = "btn perigo mini"; apagar.type = "button"; apagar.textContent = "Apagar atividade";
+      apagar.addEventListener("click", async function(){
+        if(!confirm("Apagar a atividade e manter as respostas já enviadas?")) return;
+        try{ await refAtividades(S.codigo).doc(a.id).delete(); await carregarGestaoAtividades(); }
+        catch(e){ toast(traduzErro(e)); }
+      });
+      card.appendChild(apagar);
+      minhas.forEach(function(r){
+        var bloco = document.createElement("div");
+        bloco.style.cssText = "border-top:1px solid var(--linha);margin-top:14px;padding-top:14px";
+        bloco.innerHTML = "<p style='margin:0 0 4px'><b>" + esc(r.apelido || "aluno") + "</b></p>" +
+                          "<p style='margin:0'>" + esc(r.texto || "") + "</p>";
+        var lab = document.createElement("label");
+        lab.className = "campo"; lab.style.marginTop = "10px";
+        lab.innerHTML = "<span>Retorno para o aluno</span>";
+        var inp = document.createElement("input");
+        inp.type = "text"; inp.maxLength = 400; inp.value = r.feedback || "";
+        inp.placeholder = "Escreva um retorno";
+        lab.appendChild(inp);
+        bloco.appendChild(lab);
+        var bt = document.createElement("button");
+        bt.className = "btn sec mini"; bt.type = "button"; bt.textContent = "Salvar retorno";
+        bt.addEventListener("click", async function(){
+          bt.disabled = true;
+          try{
+            await refRespostas(S.codigo).doc(r.id).update({feedback: inp.value.trim()});
+            toast("Retorno salvo");
+          }catch(e){ console.error(e); toast(traduzErro(e)); }
+          finally{ bt.disabled = false; }
+        });
+        bloco.appendChild(bt);
+        card.appendChild(bloco);
+      });
+      cx.appendChild(card);
+    });
+  }catch(e){
+    console.error(e);
+    cx.innerHTML = '<div class="aviso erro">' + esc(traduzErro(e)) + "</div>";
+  }
+}
+
+/* ============ CSV ============ */
+function csvMeu(){
+  var linhas = [["Data","Situacao","Lugar","Acao","Detalhes"]];
+  S.registros.forEach(function(r){ linhas.push([dataBr(r.data), r.tipo, r.lugar, r.titulo, r.notas || ""]); });
+  baixar(csv(linhas), "diario_" + (S.apelido || "aluno") + ".csv", "text/csv");
+}
+function csvTurma(){
+  var linhas = [["Aluno","Data","Situacao","Lugar","Acao","Detalhes"]];
+  S.registrosTurma.forEach(function(r){
+    linhas.push([r.apelido || "", dataBr(r.data), r.tipo, r.lugar, r.titulo, r.notas || ""]);
+  });
+  baixar(csv(linhas), "turma_" + S.codigo + ".csv", "text/csv");
+}
+
+/* ============ DESCOBRIR ============ */
+var SABIA = {
+  Casa: [
+    "A água que sai da sua torneira já foi rio. Ela foi captada, tratada e bombeada até aqui.",
+    "Banho é onde mais se gasta água dentro de casa. Cada minuto a menos conta.",
+    "Torneira pingando não perde só água: perde também a energia gasta para tratar e bombear essa água."
+  ],
+  Escola: [
+    "Um bebedouro ou uma descarga com defeito na escola desperdiça o dia inteiro, mesmo de noite e no fim de semana.",
+    "Avisar a direção sobre um vazamento é uma ação de cuidado com a água tão válida quanto fechar a torneira.",
+    "A escola inteira usa a mesma caixa d'água. O que um desperdiça falta para todos."
+  ],
+  Comunidade: [
+    "Lixo jogado na rua não fica na rua. Na primeira chuva ele desce pelo bueiro e vai parar no córrego.",
+    "Córrego com a margem sem mata assoreia: a terra desbarranca e o fundo vai subindo até o rio ficar raso.",
+    "Nascente protegida é nascente com mata em volta. Sem raiz segurando, a água some."
+  ]
+};
+
+function mostrarSabia(){
+  var cx = $("caixaSabia");
+  if(!cx) return;
+  var lista = SABIA[escolhido.lugar] || SABIA.Casa;
+  var i = Math.floor(Math.random() * lista.length);
+  cx.innerHTML = "<p style='margin:0'>" + esc(lista[i]) + "</p>";
+}
+
+var QUIZ = [
+  {p:"O que é uma bacia hidrográfica?",
+   o:["Toda a área onde a chuva escorre para o mesmo rio",
+      "O tanque de concreto onde a cidade guarda água da chuva",
+      "A parte mais funda de um rio, onde já não dá pé",
+      "A rede de canos que leva a água tratada até as casas"], c:0,
+   e:"É a área inteira que drena para o mesmo curso d'água. Sua casa está dentro de uma."},
+
+  {p:"Para que serve a mata ciliar?",
+   o:["Deixar a paisagem da beira do rio mais bonita",
+      "Segurar o barranco, filtrar e dar sombra ao rio",
+      "Fornecer lenha para as casas construídas na margem",
+      "Marcar até onde o rio pode subir quando enche"], c:1,
+   e:"Ela protege a margem, filtra o que escorre do terreno e mantém a água mais fresca."},
+
+  {p:"A maior parte da água do planeta é:",
+   o:["Doce, dos rios e lagos que a gente vê",
+      "Salgada, dos mares e oceanos",
+      "Congelada, das geleiras dos polos",
+      "Subterrânea, guardada nos aquíferos"], c:1,
+   e:"Quase toda a água da Terra é salgada. A doce é uma fatia pequena, e boa parte dela está congelada ou no subsolo."},
+
+  {p:"O lixo jogado na rua costuma parar onde?",
+   o:["Fica na rua até alguém passar e varrer",
+      "Some sozinho com o sol e com o vento",
+      "É levado pela chuva até o córrego",
+      "Vira adubo e some no meio do asfalto"], c:2,
+   e:"A chuva carrega o lixo pelo bueiro até o curso d'água mais próximo."},
+
+  {p:"O que é assoreamento?",
+   o:["O rio ficando raso porque enche de terra",
+      "A água do rio ficando salgada aos poucos",
+      "O rio secando porque parou de chover",
+      "A cheia que alaga a margem todo ano"], c:0,
+   e:"Sem mata segurando o barranco, a terra desce e vai enchendo o fundo do rio."},
+
+  {p:"Numa estação de tratamento, a areia serve para:",
+   o:["Deixar a água com gosto melhor",
+      "Tornar a água bem mais gelada",
+      "Filtrar o que ainda está na água",
+      "Fazer a água correr mais rápido nos canos"], c:2,
+   e:"A água atravessa camadas de areia e pedra, e ali fica retido o que ainda restou."},
+
+  {p:"Uma torneira que pinga a noite inteira:",
+   o:["Não muda nada, é só um pingo pequeno",
+      "Desperdiça água e também energia",
+      "Ajuda a manter o cano por dentro limpo",
+      "Só vira problema quando é verão"], c:1,
+   e:"Cada gota já foi captada, tratada e bombeada. Perder água é perder todo esse trabalho."},
+
+  {p:"De onde vem a água de uma nascente?",
+   o:["Da chuva que cai bem em cima dela",
+      "Do rio que sobe de volta pela serra",
+      "Da água guardada no subsolo",
+      "Do orvalho que escorre das plantas"], c:2,
+   e:"A chuva infiltra no solo, fica guardada embaixo da terra e aflora onde o terreno permite."}
+];
+
+var quizIndice = 0, quizAcertos = 0;
+
+function renderQuiz(){
+  var cx = $("quiz");
+  if(!cx) return;
+  if(quizIndice >= QUIZ.length){
+    cx.innerHTML =
+      "<p class='quiz-passo'>Resultado</p>" +
+      "<p style='font-size:1.15rem;margin:0 0 12px'><b>" + quizAcertos + " de " + QUIZ.length + "</b> certas.</p>" +
+      "<p>" + (quizAcertos === QUIZ.length
+        ? "Acertou tudo. Agora explique uma dessas para alguém da sua casa."
+        : "Volte nas cartas acima e tente de novo. Errar aqui não custa nada.") + "</p>" +
+      "<button class='btn sec' type='button' id='btnQuizDeNovo'>Começar de novo</button>";
+    $("btnQuizDeNovo").addEventListener("click", function(){
+      quizIndice = 0; quizAcertos = 0; renderQuiz();
+    });
+    return;
+  }
+  var q = QUIZ[quizIndice];
+  cx.innerHTML = "<p class='quiz-passo'>Pergunta " + (quizIndice+1) + " de " + QUIZ.length + "</p>" +
+                 "<h3 style='margin-bottom:14px'>" + esc(q.p) + "</h3><div id='quizOpcoes'></div>" +
+                 "<div id='quizRetorno'></div>";
+  var box = $("quizOpcoes");
+  q.o.forEach(function(texto, i){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "quiz-op"; b.textContent = texto;
+    b.addEventListener("click", function(){ responderQuiz(i); });
+    box.appendChild(b);
+  });
+}
+
+function responderQuiz(escolha){
+  var q = QUIZ[quizIndice];
+  var botoes = $("quizOpcoes").querySelectorAll(".quiz-op");
+  botoes.forEach(function(b, i){
+    b.disabled = true;
+    if(i === q.c) b.classList.add("certa");
+    else if(i === escolha) b.classList.add("errada");
+  });
+  if(escolha === q.c) quizAcertos++;
+  $("quizRetorno").innerHTML =
+    "<div class='saiba'><b>" + (escolha === q.c ? "Isso mesmo" : "Quase") + "</b>" + esc(q.e) + "</div>" +
+    "<button class='btn' type='button' id='btnQuizSeguir'>" +
+    (quizIndice + 1 >= QUIZ.length ? "Ver resultado" : "Próxima pergunta") + "</button>";
+  $("btnQuizSeguir").addEventListener("click", function(){ quizIndice++; renderQuiz(); });
+}
+
+/* Calcula a partir da medição feita pela criança, nunca de um número pronto. */
+var ultimaMedicao = null;
+function calcularVazamento(){
+  var ml = parseFloat($("medMl").value);
+  var cx = $("resultadoMed");
+  if(!(ml > 0)){
+    cx.innerHTML = "<div class='aviso atencao'>Meça primeiro e escreva quantos mililitros juntaram em um minuto.</div>";
+    $("btnRegistrarMed").hidden = true;
+    return;
+  }
+  var litrosDia = ml * 60 * 24 / 1000;
+  var litrosMes = litrosDia * 30;
+  var banhos = litrosMes / 90;   // um banho curto de chuveiro, valor aproximado, usado só como comparação
+  ultimaMedicao = {ml: ml, dia: litrosDia, mes: litrosMes};
+  cx.innerHTML =
+    "<div class='resultado-med'>" +
+      "<p class='quiz-passo' style='margin:0 0 4px'>Essa torneira desperdiça</p>" +
+      "<p class='num'>" + litrosDia.toFixed(1) + " litros por dia</p>" +
+      "<p style='margin:8px 0 0'>Em trinta dias, <b>" + litrosMes.toFixed(0) + " litros</b>.</p>" +
+      "<p class='fonte-quadro'>Conta feita com a sua medição: " + ml + " ml por minuto, vezes 60 minutos, vezes 24 horas. " +
+      "Isso daria mais ou menos " + banhos.toFixed(0) + " banhos de chuveiro.</p>" +
+    "</div>";
+  $("btnRegistrarMed").hidden = false;
+}
+
+function registrarMedicao(){
+  if(!ultimaMedicao) return;
+  abrirAba("registro");
+  escolhido.tipo = "A fazer";
+  $("escTipo").querySelectorAll(".escolha-bt").forEach(function(b){
+    b.setAttribute("aria-pressed", b.dataset.v === "A fazer" ? "true" : "false");
+  });
+  marcarEmoji("🔧");
+  $("rTitulo").value = "Consertar torneira que pinga";
+  $("rNotas").value = "Medi com um copo: " + ultimaMedicao.ml + " ml por minuto, " +
+                      ultimaMedicao.dia.toFixed(1) + " litros por dia, " +
+                      ultimaMedicao.mes.toFixed(0) + " litros em trinta dias.";
+  $("rTitulo").focus();
+  toast("Medição levada para o registro");
+}
+
+/* ============ BOTÕES DE ESCOLHA ============ */
+function ligarGrupo(idGrupo, chave){
+  var cx = $(idGrupo);
+  cx.querySelectorAll(".escolha-bt").forEach(function(b){
+    b.addEventListener("click", function(){
+      cx.querySelectorAll(".escolha-bt").forEach(function(o){ o.setAttribute("aria-pressed","false"); });
+      b.setAttribute("aria-pressed","true");
+      escolhido[chave] = b.dataset.v;
+      if(chave === "lugar" || chave === "tipo") mostrarSabia();
+    });
+  });
+}
+
+function montarEmojis(){
+  var cx = $("escEmoji");
+  cx.innerHTML = "";
+  EMOJIS.forEach(function(e){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "emoji-bt"; b.textContent = e;
+    b.setAttribute("aria-pressed", e === escolhido.emoji ? "true" : "false");
+    b.setAttribute("aria-label", "Símbolo " + e);
+    b.addEventListener("click", function(){ marcarEmoji(e); });
+    cx.appendChild(b);
+  });
+}
+
+function marcarEmoji(e){
+  escolhido.emoji = e;
+  $("escEmoji").querySelectorAll(".emoji-bt").forEach(function(b){
+    b.setAttribute("aria-pressed", b.textContent === e ? "true" : "false");
+  });
+}
+
+/* ============ LIGAÇÕES E INÍCIO ============ */
+function ligarTudo(){
+  ligarGrupo("escLugar","lugar");
+  ligarGrupo("escTipo","tipo");
+  montarEmojis();
+  mostrarSabia();
+  renderQuiz();
+  var fig = document.getElementById("svgEntrada");
+  if(fig) document.getElementById("figuraCiclo").innerHTML = fig.outerHTML;
+  $("btnCalcular").addEventListener("click", calcularVazamento);
+  $("btnRegistrarMed").addEventListener("click", registrarMedicao);
+  $("btnSair").addEventListener("click", sair);
+  $("btnFonte").addEventListener("click", function(){
+    var g = !document.body.classList.contains("fonte-grande");
+    document.body.classList.toggle("fonte-grande", g);
+    this.setAttribute("aria-pressed", g ? "true" : "false");
+    localStorage.setItem("diario_fonte", g ? "grande" : "normal");
+  });
+  if(localStorage.getItem("diario_fonte") === "grande"){
+    document.body.classList.add("fonte-grande");
+    $("btnFonte").setAttribute("aria-pressed","true");
+  }
+  $("btnSalvarReg").addEventListener("click", salvarRegistro);
+  $("btnLimparReg").addEventListener("click", function(){
+    $("rTitulo").value = ""; $("rNotas").value = ""; $("rData").value = hoje();
+  });
+  ["fBusca","fLugar","fTipo"].forEach(function(id){
+    $(id).addEventListener("input", renderRegistros);
+  });
+  $("btnCsv").addEventListener("click", csvMeu);
+  $("btnPublicar").addEventListener("click", publicar);
+  $("mImagem").addEventListener("change", async function(){
+    var f = this.files[0];
+    if(!f){ $("mPreview").hidden = true; return; }
+    try{
+      var dataUrl = await comprimirImagem(f);
+      $("mPreview").src = dataUrl; $("mPreview").hidden = false;
+      $("mStatus").textContent = "Imagem pronta, cerca de " + Math.round(dataUrl.length/1024) + " KB.";
+    }catch(e){ $("mPreview").hidden = true; toast(e.message); this.value = ""; }
+  });
+  $("btnCriarTurma").addEventListener("click", criarTurma);
+  $("btnSalvarMeta").addEventListener("click", salvarMeta);
+  $("btnCopiarCodigo").addEventListener("click", function(){
+    if(navigator.clipboard) navigator.clipboard.writeText(S.codigo).then(function(){ toast("Código copiado"); });
+  });
+  $("btnCsvTurma").addEventListener("click", csvTurma);
+  $("btnAtualizar").addEventListener("click", carregarTudoProfessor);
+  $("btnCriarAtividade").addEventListener("click", criarAtividade);
+  $("btnSalvarDesafio").addEventListener("click", salvarDesafio);
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+  iniciarEntrada();
+  ligarTudo();
+  var apelido = localStorage.getItem("diario_apelido"), cod = localStorage.getItem("diario_codigo");
+  if(apelido) $("inApelido").value = apelido;
+  if(cod) $("inCodigo").value = cod;
+  $("rData").value = hoje();
+});
+</script>
+</body>
+</html>
